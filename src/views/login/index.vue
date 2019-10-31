@@ -1,186 +1,78 @@
 <template>
-  <div class='login-container'>
-    <div class='login-info'>
-      <div class='title'>zuihou-admin-ui</div>
-      <div class='sub-title'>{{ $t('common.system') }}</div>
-      <div class='desc'>1. {{ $t('common.desc.a') }}</div>
-      <div class='desc'>2. {{ $t('common.desc.b') }}</div>
-      <div class='desc'>3. {{ $t('common.desc.c') }}</div>
-      <div class='desc'>4. {{ $t('common.desc.d') }}</div>
-      <div class='desc'>5. {{ $t('common.desc.e') }}</div>
-      <div class='desc'>6. {{ $t('common.desc.f') }}</div>
+  <div class="login-container">
+    <div class="login-info">
+      <div class="title">zuihou-admin-ui</div>
+      <div class="sub-title">超级管理后台</div>
+      <div class="desc">1. {{ $t('common.desc.a') }}</div>
+      <div class="desc">2. {{ $t('common.desc.b') }}</div>
+      <div class="desc">3. {{ $t('common.desc.c') }}</div>
+      <div class="desc">4. {{ $t('common.desc.d') }}</div>
+      <div class="desc">5. {{ $t('common.desc.e') }}</div>
+      <div class="desc">6. {{ $t('common.desc.f') }}</div>
     </div>
     <el-form
-      ref='loginForm'
-      :model='loginForm'
-      :rules='rules'
-      class='login-form'
-      autocomplete='off'
-      label-position='left'
+      ref="loginForm"
+      :model="loginForm"
+      :rules="rules"
+      class="login-form"
+      autocomplete="off"
+      label-position="left"
     >
-      <div class='title-container'>
-        <h3 class='title'>{{ $t('login.title') }}</h3>
-        <lang-select class='set-language' />
+      <div class="title-container">
+        <h3 class="title">{{ $t('login.title') }}平台</h3>
+        <lang-select class="set-language" />
       </div>
-      <span v-if='login.type === &quot;up&quot;'>
-        <el-form-item prop='tenant'>
+      <span v-if="login.type === &quot;up&quot;">
+        <el-form-item prop="account">
           <el-input
-            ref='tenant'
-            v-model='loginForm.tenant'
-            :placeholder='$t(&quot;login.tenant&quot;)'
-            prefix-icon='el-icon-user'
-            name='tenant'
-            type='text'
-            autocomplete='off'
-            @keyup.enter.native='handleLogin'
+            ref="account"
+            v-model="loginForm.account"
+            :placeholder="$t(&quot;login.username&quot;)"
+            prefix-icon="el-icon-user"
+            name="account"
+            type="text"
+            autocomplete="off"
+            @keyup.enter.native="handleLogin"
           />
         </el-form-item>
-        <el-form-item prop='account'>
+        <el-form-item prop="password">
           <el-input
-            ref='account'
-            v-model='loginForm.account'
-            :placeholder='$t(&quot;login.username&quot;)'
-            prefix-icon='el-icon-user'
-            name='account'
-            type='text'
-            autocomplete='off'
-            @keyup.enter.native='handleLogin'
+            ref="password"
+            v-model="loginForm.password"
+            prefix-icon="el-icon-key"
+            type="password"
+            :placeholder="$t(&quot;login.password&quot;)"
+            name="password"
+            autocomplete="off"
+            :show-password="true"
+            @keyup.enter.native="handleLogin"
           />
         </el-form-item>
-        <el-form-item prop='password'>
+        <el-form-item prop="code" class="code-input">
           <el-input
-            ref='password'
-            v-model='loginForm.password'
-            prefix-icon='el-icon-key'
-            type='password'
-            :placeholder='$t(&quot;login.password&quot;)'
-            name='password'
-            autocomplete='off'
-            :show-password='true'
-            @keyup.enter.native='handleLogin'
+            ref="code"
+            v-model="loginForm.code"
+            prefix-icon="el-icon-lock"
+            :placeholder="$t(&quot;login.code&quot;)"
+            name="code"
+            type="text"
+            autocomplete="off"
+            style="width: 70%"
+            @keyup.enter.native="handleLogin"
           />
         </el-form-item>
-        <el-form-item prop='code' class='code-input'>
-          <el-input
-            ref='code'
-            v-model='loginForm.code'
-            prefix-icon='el-icon-lock'
-            :placeholder='$t(&quot;login.code&quot;)'
-            name='code'
-            type='text'
-            autocomplete='off'
-            style='width: 70%'
-            @keyup.enter.native='handleLogin'
-          />
-        </el-form-item>
-        <img :src='imageCode' alt='codeImage' class='code-image' @click='getCodeImage' />
+        <img :src="imageCode" alt="codeImage" class="code-image" @click="getCodeImage">
         <el-button
-          :loading='loading'
-          type='primary'
-          style='width:100%;margin-bottom:14px;'
-          @click.native.prevent='handleLogin'
+          :loading="loading"
+          type="primary"
+          style="width:100%;margin-bottom:14px;"
+          @click.native.prevent="handleLogin"
         >{{ $t('login.logIn') }}</el-button>
       </span>
-      <span v-if='login.type === &quot;social&quot;'>
-        {{ $t('login.chooseToSignIn') }}
-        <div>
-          <template v-for='(l, index) in logo'>
-            <div :key='index' class='logo-wrapper'>
-              <img
-                :src='resolveLogo(l.img)'
-                alt
-                :class='{ &quot;radius&quot;: l.radius }'
-                @click='socialLogin(l.name)'
-              />
-            </div>
-          </template>
-        </div>
-      </span>
-      <span v-if='login.type === &quot;bind&quot;' style='margin-top: -1rem'>
-        <el-tabs v-model='tabActiveName' @tab-click='handleTabClick'>
-          <el-tab-pane :label='$t(&quot;common.bindLogin&quot;)' name='bindLogin'>
-            <el-form-item prop='bindAccount'>
-              <el-input
-                ref='bindAccount'
-                v-model='loginForm.bindAccount'
-                :placeholder='$t(&quot;login.account&quot;)'
-                prefix-icon='el-icon-user'
-                name='bindAccount'
-                type='text'
-                autocomplete='off'
-              />
-            </el-form-item>
-            <el-form-item prop='bindPassword'>
-              <el-input
-                ref='bindPassword'
-                v-model='loginForm.bindPassword'
-                :placeholder='$t(&quot;login.password&quot;)'
-                prefix-icon='el-icon-key'
-                name='bindPassword'
-                type='password'
-                :show-password='true'
-                autocomplete='off'
-              />
-            </el-form-item>
-            <el-button
-              :loading='loading'
-              type='primary'
-              style='width:100%;margin-bottom:14px;'
-              @click.native.prevent='bindLogin'
-            >{{ $t('common.bindLogin') }}</el-button>
-          </el-tab-pane>
-          <el-tab-pane :label='$t(&quot;common.signLogin&quot;)' name='signLogin'>
-            <el-form-item prop='signAccount'>
-              <el-input
-                ref='signAccount'
-                v-model='loginForm.signAccount'
-                :placeholder='$t(&quot;login.account&quot;)'
-                prefix-icon='el-icon-user'
-                name='signAccount'
-                type='text'
-                autocomplete='off'
-              />
-            </el-form-item>
-            <el-form-item prop='signPassword'>
-              <el-input
-                ref='signPassword'
-                v-model='loginForm.signPassword'
-                :placeholder='$t(&quot;login.password&quot;)'
-                prefix-icon='el-icon-key'
-                name='signPassword'
-                type='password'
-                :show-password='true'
-                autocomplete='off'
-              />
-            </el-form-item>
-            <el-button
-              :loading='loading'
-              type='primary'
-              style='width:100%;margin-bottom:14px;'
-              @click.native.prevent='signLogin'
-            >{{ $t('common.signLogin') }}</el-button>
-          </el-tab-pane>
-        </el-tabs>
-      </span>
-      <el-dropdown class='login-type' placement='top-end'>
-        <span class='el-dropdown-link'>
-          <el-link type='primary'>{{ $t('login.ortherLoginType') }}</el-link>
-        </span>
-        <el-dropdown-menu slot='dropdown'>
-          <el-dropdown-item
-            :disabled='login.type === &quot;up&quot;'
-            @click.native='login.type = &quot;up&quot;'
-          >{{ $t('login.type.up') }}</el-dropdown-item>
-          <el-dropdown-item
-            :disabled='login.type === &quot;social&quot;'
-            @click.native='login.type = &quot;social&quot;'
-          >{{ $t('login.type.social') }}</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
     </el-form>
-    <span class='login-footer'>
+    <span class="login-footer">
       © 2019
-      <a target='_blank' href='https://github.com/zuihou'>zuihou</a> - zuihou-admin-cloud
+      <a target="_blank" href="https://github.com/zuihou">zuihou</a> - zuihou-admin-cloud
     </span>
   </div>
 </template>
@@ -189,7 +81,6 @@
 import LangSelect from '@/components/LangSelect'
 import db from '@/utils/localstorage'
 import { randomNum } from '@/utils'
-import { socialLoginUrl } from '@/settings'
 import loginApi from '@/api/Login.js'
 import commonApi from '@/api/Common.js'
 
@@ -211,9 +102,8 @@ export default {
         { img: 'microsoft.png', name: 'microsoft', radius: false }
       ],
       loginForm: {
-        account: 'zuihou',
+        account: 'demoAdmin',
         password: 'zuihou',
-        tenant: '0000',
         bindAccount: '',
         bindPassword: '',
         signAccount: '',
@@ -221,7 +111,6 @@ export default {
       },
       rules: {
         account: { required: true, message: this.$t('rules.require'), trigger: 'blur' },
-        tenant: { required: true, message: this.$t('rules.require'), trigger: 'blur' },
         password: { required: true, message: this.$t('rules.require'), trigger: 'blur' },
         code: { required: true, message: this.$t('rules.require'), trigger: 'blur' },
         bindAccount: { required: true, message: this.$t('rules.require'), trigger: 'blur' },
@@ -249,7 +138,6 @@ export default {
     }
   },
   created () {
-
 
   },
   mounted () {
@@ -289,41 +177,7 @@ export default {
           }
         })
     },
-    handleTabClick (tab, event) {
-      this.tabActiveName = tab.name
-    },
-    resolveLogo (logo) {
-      return require(`@/assets/logo/${logo}`)
-    },
-    socialLogin (oauthType) {
-      const url = `${socialLoginUrl}/${oauthType}/login`
-      window.open(url, 'newWindow', `resizable=yes, height=${this.page.height}, width=${this.page.width}, top=10%, left=10%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no`)
-      window.addEventListener('message', this.resolveSocialLogin, false)
-    },
-    resolveSocialLogin (e) {
-      const data = e.data
-      const that = this
-      if (data.message === 'not_bind') {
-        that.login.type = 'bind'
-        const authUser = data.data
-        that.authUser = authUser
-        that.$confirm(that.$t('common.current') + authUser.source + that.$t('common.socialAccount') + authUser.nickname + that.$t('common.socialTips'), that.$t('common.tips'), {
-          confirmButtonText: that.$t('common.signLogin'),
-          cancelButtonText: that.$t('common.bindLogin'),
-          type: 'warning'
-        }).then(() => {
-          that.tabActiveName = 'signLogin'
-        }).catch(() => {
-          that.tabActiveName = 'bindLogin'
-        })
-      } else if (data.message === 'social_login_success') {
-        that.saveLoginData(data.data)
-        that.getUserDetailInfo()
-        that.loginSuccessCallback(data.account)
-      } else {
-        // do nothing
-      }
-    },
+
     bindLogin () {
       let account_c = false
       let password_c = false
@@ -349,41 +203,15 @@ export default {
         })
       }
     },
-    signLogin () {
-      let account_c = false
-      let password_c = false
-      this.$refs.loginForm.validateField('signAccount', e => { if (!e) { account_c = true } })
-      this.$refs.loginForm.validateField('signPassword', e => { if (!e) { password_c = true } })
-      if (account_c && password_c) {
-        this.loading = true
-        const that = this
-        const params = {
-          bindAccount: that.loginForm.signAccount,
-          bindPassword: that.loginForm.signPassword,
-          ...that.authUser
-        }
-        params.token = null
-        that.$post('auth/social/sign/login', params).then((r) => {
-          const data = r.data.data
-          this.saveLoginData(data)
-          this.getUserDetailInfo()
-          this.loginSuccessCallback(that.loginForm.signAccount)
-        }).catch((error) => {
-          console.error(error)
-          that.loading = false
-        })
-      }
-    },
+
     handleLogin () {
       let account_c = false
       let password_c = false
-      let tenant_c = false
       let code_c = false
-      this.$refs.loginForm.validateField('tenant', e => { if (!e) { tenant_c = true } })
       this.$refs.loginForm.validateField('account', e => { if (!e) { account_c = true } })
       this.$refs.loginForm.validateField('password', e => { if (!e) { password_c = true } })
       this.$refs.loginForm.validateField('code', e => { if (!e) { code_c = true } })
-      if (account_c && password_c && code_c && tenant_c) {
+      if (account_c && password_c && code_c) {
         this.loading = true
         const that = this
         that.loginForm['key'] = that.randomId
@@ -407,7 +235,6 @@ export default {
       }
     },
     saveLoginData (token) {
-      this.$store.commit('account/setTenant', this.loginForm.tenant)
       this.$store.commit('account/setToken', token.token)
       const current = new Date()
       const expireTime = current.setTime(current.getTime() + 1000 * token.expire)
@@ -449,9 +276,7 @@ export default {
       this.$store.commit('account/setPermissions', permissions)
     },
     loginSuccessCallback (user) {
-      // 登录成功后的回调，记录登录日志，最后登录时间等
-      //this.$get(`system/user/success/${account}`).catch((e) => { console.log(e) })
-      commonApi.dictionaryEnums()
+      commonApi.enums()
         .then(res => {
           if (res.isSuccess) {
             this.$store.commit('common/setEnums', res.data)
@@ -537,8 +362,8 @@ $light_gray: #eee;
     top: 50%;
     left: 70%;
     margin: -180px 0 0 -160px;
-    width: 320px;
-    height: 440px;
+    width: 350px;
+    height: 380px;
     padding: 36px;
     background: #fff;
     border-radius: 3px;

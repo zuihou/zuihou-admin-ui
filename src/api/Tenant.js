@@ -17,6 +17,10 @@ const apiList = {
   remove: {
     method: 'DELETE',
     url: `/authority/tenant/remove`
+  },
+  list: {
+    method: 'GET',
+    url: `/authority/tenant`
   }
 }
 
@@ -35,7 +39,8 @@ export default {
       data
     })
   },
-  saveInit (data) {
+  // 同步创建租户，防止在切换回默认数据源时，执行其他方法
+  async saveInit (data) {
     return axiosApi({
       ...apiList.saveInit,
       data
@@ -50,6 +55,12 @@ export default {
   remove (data) {
     return axiosApi({
       ...apiList.remove,
+      data
+    })
+  },
+  list (data) {
+    return axiosApi({
+      ...apiList.list,
       data
     })
   }

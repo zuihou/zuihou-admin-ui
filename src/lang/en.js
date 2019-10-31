@@ -46,6 +46,15 @@ export default {
       passwordErrorNum: 'PasswordErrorNum',
       passwordErrorLockTime: 'PasswordErrorLockTime'
     },
+    globalUser: {
+      tenantCode: 'TenantCode',
+      account: 'Account',
+      mobile: 'Mobile',
+      name: 'Name',
+      email: 'Email',
+      password: 'Password',
+      confirmPassword: 'ConfirmPassword'
+    },
     user: {
       username: 'UserName',
       password: 'Password',
@@ -209,6 +218,7 @@ export default {
     range6to20: '6 to 20 characters in length',
     email: 'Email is invalid',
     mobile: 'Phone number is invalid',
+    accountExist: 'The account already exists',
     usernameExist: 'The username already exists',
     clientIdExist: 'The clientId already exists',
     roleNameExist: 'The role name already exists',

@@ -2,7 +2,7 @@ import axiosApi from './AxiosApi.js'
 
 const apiList = {
   // 获取当前系统的所有枚举
-  dictionaryEnums: '/gate/dictionary/enums'
+  enums: '/gate/enums'
 }
 
 export default {
@@ -15,10 +15,10 @@ export default {
       data
     })
   },
-  dictionaryEnums () {
+  enums () {
     return axiosApi({
       method: 'GET',
-      url: apiList.dictionaryEnums
+      url: apiList.enums
     })
   }
 }

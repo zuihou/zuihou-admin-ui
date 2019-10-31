@@ -2,8 +2,14 @@ import axiosApi from './AxiosApi.js'
 
 const apiList = {
   getCaptcha: `/authority/anno/captcha`,
-  login: `/authority/anno/login`,
-  getRouter: `/authority/menu/router`
+  login: {
+    method: 'POST',
+    url: `/authority/anno/admin/login`
+  },
+  getRouter: {
+    url: `/authority/menu/admin/router`,
+    method: 'GET'
+  }
 }
 
 export default {
@@ -16,18 +22,17 @@ export default {
   },
   login (data) {
     return axiosApi({
-      method: 'POST',
-      url: apiList.login,
+      ...apiList.login,
       formData: true,
       data
     })
   },
   getRouter (data) {
     return axiosApi({
-      method: 'GET',
-      url: apiList.getRouter,
+      ...apiList.getRouter,
       formData: true,
       data: data || {}
     })
   }
+
 }

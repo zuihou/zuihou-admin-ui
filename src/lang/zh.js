@@ -46,6 +46,15 @@ export default {
       passwordErrorNum: '密码输错次数',
       passwordErrorLockTime: '账号锁定时间'
     },
+    globalUser: {
+      tenantCode: '企业编码',
+      account: '账号',
+      mobile: '手机',
+      name: '姓名',
+      email: '邮箱',
+      password: '密码',
+      confirmPassword: '确认密码'
+    },
     user: {
       username: '用户名',
       password: '密码',
@@ -209,6 +218,7 @@ export default {
     range6to20: '长度在 6 到 20 个字符',
     email: '请输入正确的邮箱地址',
     mobile: '请输入合法的手机号',
+    accountExist: '该账号已存在',
     usernameExist: '该用户名已存在',
     clientIdExist: '该Client ID已存在',
     roleNameExist: '该角色名称已存在',

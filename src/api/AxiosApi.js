@@ -6,7 +6,6 @@ import db from '@/utils/localstorage'
 axios.interceptors.request.use(
   config => {
     config.headers.token = db.get('TOKEN', '')
-    config.headers.tenant = db.get('TENANT', '')
     return config
   },
   error => {
