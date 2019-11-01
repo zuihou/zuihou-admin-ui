@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'zuihou-ui',
+  title: 'zuihou-admin-ui',
   // Spring Boot Admin控制台地址
   springBootAdminUrl: 'http://localhost:8401',
   // Swagger UI 地址

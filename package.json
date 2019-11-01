@@ -1,5 +1,5 @@
 {
-  "name": "zuihou-ui",
+  "name": "zuihou-admin-ui",
   "version": "1.0.0",
   "description": "zuihou-admin-cloud 前端项目",
   "author": "zuihou",
@@ -34,10 +34,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/zuihou/zuihou-ui"
+    "url": "https://github.com/zuihou/zuihou-admin-ui"
   },
   "bugs": {
-    "url": "https://github.com/zuihou/zuihou-ui/issues"
+    "url": "https://github.com/zuihou/zuihou-admin-ui/issues"
   },
   "dependencies": {
     "@riophae/vue-treeselect": "0.0.38",

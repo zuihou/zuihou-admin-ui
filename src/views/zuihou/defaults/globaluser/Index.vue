@@ -95,6 +95,17 @@
       </el-table-column>
       <el-table-column
         sortable
+        :label="$t(&quot;table.systemData&quot;)"
+        prop="readonly"
+        align="center"
+        width="120px"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.readonly ? $t("common.yes") : $t("common.no") }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        sortable
         :label="$t(&quot;table.createTime&quot;)"
         prop="createTime"
         align="center"
@@ -222,18 +233,26 @@ export default {
       }).then(() => {
         let contain = false
         const userIds = []
-        debugger
+        let isSystemData = false
         const tenantCodeList = new Set()
         this.selection.forEach((item) => {
           if (item.id === this.currentUser.id) {
             contain = true
             return
           }
+          if (item.readonly) {
+            isSystemData = true
+            return
+          }
           tenantCodeList.add(item.tenantCode)
           userIds.push(item.id)
         })
-
-        if (contain) {
+        if (isSystemData) {
+          this.$message({
+            message: this.$t('tips.systemData'),
+            type: 'warning'
+          })
+        } else if (contain) {
           this.$message({
             message: this.$t('tips.containCurrentUser'),
             type: 'warning'
@@ -269,6 +288,13 @@ export default {
     },
 
     edit (row) {
+      if (row.readonly) {
+        this.$message({
+          message: this.$t('tips.systemData'),
+          type: 'warning'
+        })
+        return
+      }
       this.$refs.edit.setGlobalUser(row)
       this.$refs.edit.type = 'edit'
       this.dialog.title = this.$t('common.edit')

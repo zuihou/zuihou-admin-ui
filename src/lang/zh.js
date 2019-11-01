@@ -152,7 +152,8 @@ export default {
     resetPassword: '密码重置',
     openInNewPage: '新页面打开',
     createTime: '创建时间',
-    updateTime: '修改时间'
+    updateTime: '修改时间',
+    systemData: '是否内置'
   },
   tagsView: {
     refresh: '刷新当前',
@@ -182,6 +183,7 @@ export default {
     createSuccess: '新增成功',
     updateSuccess: '修改成功',
     deleteSuccess: '删除成功',
+    systemData: '系统数据，不能操作',
     noDataSelected: '请先选择需要操作的数据',
     confirmDelete: '选中数据将被永久删除, 是否继续？',
     confirmDeleteCache: '是否立即清除用户权限缓存？',

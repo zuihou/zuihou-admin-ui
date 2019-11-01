@@ -1,168 +1,183 @@
 <template>
-  <div class='app-container'>
-    <div class='filter-container'>
+  <div class="app-container">
+    <div class="filter-container">
       <el-input
-        v-model='queryParams.code'
-        :placeholder='$t(&quot;table.tenant.code&quot;)'
-        class='filter-item search-item'
+        v-model="queryParams.code"
+        :placeholder="$t(&quot;table.tenant.code&quot;)"
+        class="filter-item search-item"
       />
       <el-input
-        v-model='queryParams.name'
-        :placeholder='$t(&quot;table.tenant.name&quot;)'
-        class='filter-item search-item'
+        v-model="queryParams.name"
+        :placeholder="$t(&quot;table.tenant.name&quot;)"
+        class="filter-item search-item"
       />
       <el-date-picker
-        v-model='queryParams.timeRange'
-        :range-separator='null'
-        :start-placeholder='$t(&quot;table.createTime&quot;)'
-        value-format='yyyy-MM-dd HH:mm:ss'
-        format='yyyy-MM-dd HH:mm:ss'
-        class='filter-item search-item date-range-item'
-        type='daterange'
+        v-model="queryParams.timeRange"
+        :range-separator="null"
+        :start-placeholder="$t(&quot;table.createTime&quot;)"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        format="yyyy-MM-dd HH:mm:ss"
+        class="filter-item search-item date-range-item"
+        type="daterange"
       />
-      <el-button class='filter-item' type='primary' plain @click='search'>{{ $t('table.search') }}</el-button>
-      <el-button class='filter-item' type='warning' plain @click='reset'>{{ $t('table.reset') }}</el-button>
-      <el-dropdown trigger='click' class='filter-item'>
+      <el-button class="filter-item" type="primary" plain @click="search">{{ $t('table.search') }}</el-button>
+      <el-button class="filter-item" type="warning" plain @click="reset">{{ $t('table.reset') }}</el-button>
+      <el-dropdown trigger="click" class="filter-item">
         <el-button>
           {{ $t('table.more') }}
-          <i class='el-icon-arrow-down el-icon--right' />
+          <i class="el-icon-arrow-down el-icon--right" />
         </el-button>
-        <el-dropdown-menu slot='dropdown'>
+        <el-dropdown-menu slot="dropdown">
           <el-dropdown-item
-            icon='el-icon-circle-plus-outline'
-            @click.native='add'
+            icon="el-icon-circle-plus-outline"
+            @click.native="add"
           >{{ $t('table.add') }}</el-dropdown-item>
           <el-dropdown-item
-            icon='el-icon-delete'
-            @click.native='batchDelete'
+            icon="el-icon-delete"
+            @click.native="batchDelete"
           >{{ $t('table.delete') }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
 
     <el-table
-      ref='table'
-      :key='tableKey'
-      v-loading='loading'
-      :data='tableData.records'
+      ref="table"
+      :key="tableKey"
+      v-loading="loading"
+      :data="tableData.records"
       border
       fit
-      style='width: 100%;'
-      @selection-change='onSelectChange'
-      @sort-change='sortChange'
+      style="width: 100%;"
+      @selection-change="onSelectChange"
+      @sort-change="sortChange"
     >
-      <el-table-column type='selection' align='center' width='40px' />
+      <el-table-column type="selection" align="center" width="40px" />
       <el-table-column
-        :label='$t(&quot;table.tenant.code&quot;)'
-        prop='code'
-        :show-overflow-tooltip='true'
-        align='center'
-        width='100px'
+        :label="$t(&quot;table.tenant.code&quot;)"
+        prop="code"
+        :show-overflow-tooltip="true"
+        align="center"
+        width="100px"
       >
-        <template slot-scope='scope'>
+        <template slot-scope="scope">
           <span>{{ scope.row.code }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        :label='$t(&quot;table.tenant.name&quot;)'
-        prop='name'
-        :show-overflow-tooltip='true'
-        class-name='status-col'
+        :label="$t(&quot;table.tenant.name&quot;)"
+        prop="name"
+        :show-overflow-tooltip="true"
+        class-name="status-col"
       >
-        <template slot-scope='scope'>
+        <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label='$t(&quot;table.tenant.duty&quot;)' class-name='status-col'>
-        <template slot-scope='scope'>
-          <span>{{scope.row.duty}}</span>
+      <el-table-column
+        :label="$t(&quot;table.tenant.duty&quot;)"
+        width="80px"
+        class-name="status-col"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.duty }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        :label='$t(&quot;table.tenant.type&quot;)'
-        :show-overflow-tooltip='true'
-        prop='type'
-        align='center'
-        width='80px'
-        :filter-multiple='false'
-        :filter-method='typeFilterHandler'
-        :filters='typeFilterList'
+        :label="$t(&quot;table.tenant.type&quot;)"
+        :show-overflow-tooltip="true"
+        prop="type"
+        align="center"
+        width="80px"
+        :filter-multiple="false"
+        :filter-method="typeFilterHandler"
+        :filters="typeFilterList"
       >
-        <template slot-scope='{row}'>
-          <el-tag :type='row.type.code | typeFilter'>{{ row.type.desc }}</el-tag>
+        <template slot-scope="{row}">
+          <el-tag :type="row.type.code | typeFilter">{{ row.type.desc }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
-        :label='$t(&quot;table.tenant.status&quot;)'
-        align='center'
-        :show-overflow-tooltip='true'
-        prop='status'
-        width='90px'
-        :filter-multiple='false'
-        :filter-method='statusFilterHandler'
-        :filters='statusFilterList'
+        :label="$t(&quot;table.tenant.status&quot;)"
+        align="center"
+        :show-overflow-tooltip="true"
+        prop="status"
+        width="90px"
+        :filter-multiple="false"
+        :filter-method="statusFilterHandler"
+        :filters="statusFilterList"
       >
-        <template slot-scope='{row}'>
-          <el-tag :type='row.status.code | statusFilter'>{{ row.status.desc }}</el-tag>
+        <template slot-scope="{row}">
+          <el-tag :type="row.status.code | statusFilter">{{ row.status.desc }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
-        :label='$t(&quot;table.tenant.expirationTime&quot;)'
-        prop='expirationTime'
-        align='center'
-        width='170px'
+        :label="$t(&quot;table.tenant.expirationTime&quot;)"
+        prop="expirationTime"
+        align="center"
+        width="170px"
       >
-        <template slot-scope='scope'>
+        <template slot-scope="scope">
           <span>{{ scope.row.expirationTime ? scope.row.expirationTime : '永久' }}</span>
         </template>
       </el-table-column>
       <el-table-column
         sortable
-        :label='$t(&quot;table.createTime&quot;)'
-        prop='createTime'
-        align='center'
-        width='170px'
+        :label="$t(&quot;table.systemData&quot;)"
+        prop="readonly"
+        align="center"
+        width="120px"
       >
-        <template slot-scope='scope'>
+        <template slot-scope="scope">
+          <span>{{ scope.row.readonly ? $t("common.yes") : $t("common.no") }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        sortable
+        :label="$t(&quot;table.createTime&quot;)"
+        prop="createTime"
+        align="center"
+        width="170px"
+      >
+        <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        :label='$t(&quot;table.operation&quot;)'
-        align='center'
-        width='150px'
-        class-name='small-padding fixed-width'
+        :label="$t(&quot;table.operation&quot;)"
+        align="center"
+        width="150px"
+        class-name="small-padding fixed-width"
       >
-        <template slot-scope='{row}'>
-          <i class='el-icon-view table-operation' style='color: #87d068;' @click='view(row)' />
-          <i class='el-icon-edit table-operation' style='color: #2db7f5;' @click='edit(row)' />
+        <template slot-scope="{row}">
+          <i class="el-icon-view table-operation" style="color: #87d068;" @click="view(row)" />
+          <i class="el-icon-edit table-operation" style="color: #2db7f5;" @click="edit(row)" />
           <i
-            class='el-icon-delete table-operation'
-            style='color: #f50;'
-            @click='singleDelete(row)'
+            class="el-icon-delete table-operation"
+            style="color: #f50;"
+            @click="singleDelete(row)"
           />
           <el-link
-            v-has-no-permission='[&quot;tenant:view&quot;,&quot;tenant:update&quot;,&quot;tenant:delete&quot;]'
-            class='no-perm'
+            v-has-no-permission="[&quot;tenant:view&quot;,&quot;tenant:update&quot;,&quot;tenant:delete&quot;]"
+            class="no-perm"
           >{{ $t('tips.noPermission') }}</el-link>
         </template>
       </el-table-column>
     </el-table>
     <pagination
-      v-show='tableData.total>0'
-      :total='Number(tableData.total)'
-      :page.sync='pagination.current'
-      :limit.sync='pagination.size'
-      @pagination='fetch'
+      v-show="tableData.total>0"
+      :total="Number(tableData.total)"
+      :page.sync="pagination.current"
+      :limit.sync="pagination.size"
+      @pagination="fetch"
     />
     <tenant-edit
-      ref='edit'
-      :dialog-visible='dialog.isVisible'
-      :title='dialog.title'
-      @success='editSuccess'
-      @close='editClose'
+      ref="edit"
+      :dialog-visible="dialog.isVisible"
+      :title="dialog.title"
+      @success="editSuccess"
+      @close="editClose"
     />
-    <tenant-view ref='view' :dialog-visible='tenantViewVisible' @close='viewClose' />
+    <tenant-view ref="view" :dialog-visible="tenantViewVisible" @close="viewClose" />
   </div>
 </template>
 
@@ -224,8 +239,8 @@ export default {
       return this.$store.state.common.enums
     },
     typeFilterList () {
-      let list = []
-      for (let key in this.enum.TenantTypeEnum) {
+      const list = []
+      for (const key in this.enum.TenantTypeEnum) {
         list.push({
           value: key,
           text: this.enum.TenantTypeEnum[key]
@@ -234,9 +249,8 @@ export default {
       return list
     },
     statusFilterList () {
-      let list = []
-
-      for (let key in this.enum.TenantStatusEnum) {
+      const list = []
+      for (const key in this.enum.TenantStatusEnum) {
         list.push({
           value: key,
           text: this.enum.TenantStatusEnum[key]
@@ -299,14 +313,28 @@ export default {
         })
         return
       }
-      let contain = false
       this.$confirm(this.$t('tips.confirmDelete'), this.$t('common.tips'), {
         confirmButtonText: this.$t('common.confirm'),
         cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
-        const ids = this.selection.map(item => item.id)
-        this.delete(ids)
+        const ids = []
+        let contain = false
+        this.selection.forEach((item) => {
+          if (item.readonly) {
+            contain = true
+            return
+          }
+          ids.push(item.id)
+        })
+        if (contain) {
+          this.$message({
+            message: this.$t('tips.systemData'),
+            type: 'warning'
+          })
+        } else {
+          this.delete(ids)
+        }
       }).catch(() => {
         this.clearSelections()
       })
@@ -331,6 +359,13 @@ export default {
       this.tenantViewVisible = true
     },
     edit (row) {
+      if (row.readonly) {
+        this.$message({
+          message: this.$t('tips.systemData'),
+          type: 'warning'
+        })
+        return
+      }
       this.$refs.edit.setTenant(row)
       this.$refs.edit.type = 'edit'
       this.dialog.title = this.$t('common.edit')

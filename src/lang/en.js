@@ -152,7 +152,8 @@ export default {
     resetPassword: 'RestPassword',
     openInNewPage: 'New Page',
     createTime: 'createTime',
-    updateTime: 'updateTime'
+    updateTime: 'updateTime',
+    systemData: 'Is System Data'
   },
   tagsView: {
     refresh: 'Refresh',
@@ -168,7 +169,7 @@ export default {
     sidebarLogo: 'Sidebar Logo'
   },
   system: {
-    title: 'zuihou-ui System'
+    title: 'zuihou-admin-ui System'
   },
   tips: {
     systemError: 'System maintenance, please try again~',
@@ -182,6 +183,7 @@ export default {
     createSuccess: 'Create successfully',
     updateSuccess: 'Update successfully',
     deleteSuccess: 'Delete successfully',
+    systemData: 'System Data, Inoperable',
     noDataSelected: 'No data selected yet',
     confirmDelete: 'The selected data will be permanently deleted, continue?',
     confirmDeleteCache: 'Whether to clear the user permission cache immediately?',
