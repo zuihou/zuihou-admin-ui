@@ -150,7 +150,6 @@
 </template>
 <script>
 import echarts from 'echarts'
-import { parseTime } from '@/utils'
 import countTo from 'vue-count-to'
 import resize from '@/components/Charts/mixins/resize'
 import dashboardApi from '@/api/Dashboard.js'
@@ -205,13 +204,12 @@ export default {
       return this.$store.state.account.user
     },
     avatar () {
-      // return require(`@/assets/avatar/${this.user.photo}`)
       return require(`@/assets/avatar/default.jpg`)
     }
   },
   mounted () {
     this.welcomeMessage = this.welcome()
-    this.initIndexData()
+    // this.initIndexData()
   },
   methods: {
     welcome () {

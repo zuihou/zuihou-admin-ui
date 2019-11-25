@@ -63,5 +63,11 @@ export default {
       ...apiList.list,
       data
     })
+  },
+  check (code) {
+    return axiosApi({
+      method: 'GET',
+      url: `/authority/tenant/check/${code}`
+    })
   }
 }
