@@ -156,10 +156,6 @@
             style="color: #f50;"
             @click="singleDelete(row)"
           />
-          <el-link
-            v-has-no-permission="[&quot;tenant:view&quot;,&quot;tenant:update&quot;,&quot;tenant:delete&quot;]"
-            class="no-perm"
-          >{{ $t('tips.noPermission') }}</el-link>
         </template>
       </el-table-column>
     </el-table>

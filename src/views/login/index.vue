@@ -9,6 +9,17 @@
       <div class="desc">4. {{ $t('common.desc.d') }}</div>
       <div class="desc">5. {{ $t('common.desc.e') }}</div>
       <div class="desc">6. {{ $t('common.desc.f') }}</div>
+      <div class="desc">
+        7.
+        <a href="http://tangyh.top:10000/zuihou-ui" target="_blank">租户后台</a>
+      </div>
+      <div class="desc">
+        8. 源码：
+        <a href="https://github.com/zuihou/zuihou-admin-cloud" target="_blank">github</a>、
+        <a href="https://gitee.com/zuihou111/zuihou-admin-cloud" target="_blank">gitee</a>、
+        <a href="https://gitee.com/zuihou111/zuihou-ui" target="_blank">ui</a>、
+        <a href="https://gitee.com/zuihou111/zuihou-admin-ui" target="_blank">zuihou-admin-ui</a>
+      </div>
     </div>
     <el-form
       ref="loginForm"
