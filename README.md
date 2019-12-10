@@ -38,12 +38,12 @@ zuihou-admin-ui 是[zuihou-admin-cloud](https://github.com/zuihou/zuihou-admin-c
 
 ## 项目截图：
 
-| 预览                                                        | 预览                                                        |
-| ----------------------------------------------------------- | ----------------------------------------------------------- |
-| ![SBA监控.png](docs/image/项目相关/开发%26运营后台预览.png) | ![SBA监控.png](docs/image/项目相关/租户后台预览.png)        |
-| ![SBA监控.png](docs/image/监控界面/sba.png)                 | ![SBA监控.png](docs/image/监控界面/zipkin.png)              |
-| ![swagger.png](docs/image/项目相关/swagger获取token.jpg)    | ![admin-api.png](docs/image/项目相关/admin-api.png)         |
-| ![SBA监控.png](docs/image/1000star.png)                     | ![定时任务.png](docs/image/项目相关/zuihou-jobs-server.png) |
+| 预览                                                   | 预览                                                   |
+| ------------------------------------------------------ | ------------------------------------------------------ |
+| ![SBA监控.png](image/项目相关/开发%26运营后台预览.png) | ![SBA监控.png](image/项目相关/租户后台预览.png)        |
+| ![SBA监控.png](image/监控界面/sba.png)                 | ![SBA监控.png](image/监控界面/zipkin.png)              |
+| ![swagger.png](image/项目相关/swagger获取token.jpg)    | ![admin-api.png](image/项目相关/admin-api.png)         |
+| ![SBA监控.png](image/1000star.png)                     | ![定时任务.png](image/项目相关/zuihou-jobs-server.png) |
 
 ## 技术栈
 
