@@ -2,6 +2,8 @@
 
 zuihou-admin-ui 是[zuihou-admin-cloud](https://github.com/zuihou/zuihou-admin-cloud)微服务权限系统的 `开发&运营后台`，基于[vue element admin](https://panjiachen.github.io/vue-element-admin-site/zh/)构建。
 
+所谓`租户后台`，即是给租户（客户）使用，而`开发&运营后台`则是给使用此框架的公司内部人员维护项目使用。
+
 ## 如果您觉得有帮助，请点右上角 "Star" 支持一下，谢谢!!
 
 ## 项目代码地址
@@ -188,7 +190,7 @@ npm run lint
 
 ## 交流群： 63202894
 
-![qq群.png](images/qq群.png) <a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=489800b9d07d017fa0b5104608a4bf755f1f38276b79f0ac5e6225d0d9897efb"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="zuihou-admin-cloud 交流" title="zuihou-admin-cloud 交流"></a>
+![qq群.png](image/qq群.png) <a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=489800b9d07d017fa0b5104608a4bf755f1f38276b79f0ac5e6225d0d9897efb"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="zuihou-admin-cloud 交流" title="zuihou-admin-cloud 交流"></a>
 
 ## 期待您的加入：
 
