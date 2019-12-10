@@ -2,7 +2,7 @@
 
 zuihou-admin-ui 是[zuihou-admin-cloud](https://github.com/zuihou/zuihou-admin-cloud)微服务权限系统的 `开发&运营后台`，基于[vue element admin](https://panjiachen.github.io/vue-element-admin-site/zh/)构建。
 
-## 如果您觉得有帮助，请点右上角 "Star" 支持一下，谢谢！
+## 如果您觉得有帮助，请点右上角 "Star" 支持一下，谢谢!!
 
 ## 项目代码地址
 
