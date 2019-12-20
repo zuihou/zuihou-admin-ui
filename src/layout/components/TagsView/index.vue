@@ -20,7 +20,11 @@
         />
       </router-link>
     </scroll-pane>
-    <ul v-show="visible" :style="{left:left+&quot;px&quot;,top:top+&quot;px&quot;}" class="contextmenu">
+    <ul
+      v-show="visible"
+      :style="{left:left+&quot;px&quot;,top:top+&quot;px&quot;}"
+      class="contextmenu"
+    >
       <li @click="refreshSelectedTag(selectedTag)">{{ $t('tagsView.refresh') }}</li>
       <li v-if="!(selectedTag.meta&&selectedTag.meta.affix)" @click="closeSelectedTag(selectedTag)">
         {{
@@ -117,7 +121,6 @@ export default {
     },
     moveToCurrentTag () {
       const tags = this.$refs.tag
-      debugger
       this.$nextTick(() => {
         for (const tag of tags) {
           if (tag.to.path === this.$route.path) {
@@ -178,7 +181,6 @@ export default {
       }
     },
     openMenu (tag, e) {
-      debugger
       const menuMinWidth = 105
       const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
       const offsetWidth = this.$el.offsetWidth // container width

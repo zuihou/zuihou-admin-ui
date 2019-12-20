@@ -297,7 +297,6 @@ export default {
     save () {
       tenantApi.save(this.tenant)
         .then(res => {
-          debugger
           if (res.isError) {
             return
           }
@@ -312,7 +311,6 @@ export default {
     update () {
       tenantApi.update(this.tenant)
         .then(res => {
-          debugger
           if (res.isError) {
             return
           }
