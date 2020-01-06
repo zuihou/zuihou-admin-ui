@@ -23,7 +23,7 @@ export default {
   login (data) {
     return axiosApi({
       ...apiList.login,
-      formData: true,
+      // formData: true,
       data
     })
   },
