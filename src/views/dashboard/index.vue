@@ -1,13 +1,13 @@
 <template>
   <div class="main">
     <el-row :gutter="10">
-      <el-col :xs="24" :sm="24">
+      <el-col :sm="24" :xs="24">
         <div class="app-container user-container">
           <el-row :gutter="10">
-            <el-col :xs="24" :sm="12">
+            <el-col :sm="12" :xs="24">
               <div class="user-wrapper">
                 <div class="user-header">
-                  <img alt="avatar" :src="avatar">
+                  <img :src="avatar" alt="avatar">
                 </div>
                 <div class="user-info">
                   <div class="random-message">{{ welcomeMessage }}</div>
@@ -16,34 +16,32 @@
                   </div>
                   <div class="user-login-info">
                     {{ $t('common.lastLoginTime') }}：
-                    <span
-                      id="last-login-time"
-                    >{{ user.lastLoginTime ? user.lastLoginTime : $t('common.firstLogin') }}</span>
+                    <span id="last-login-time">{{ user.lastLoginTime ? user.lastLoginTime : $t('common.firstLogin') }}</span>
                   </div>
                 </div>
               </div>
             </el-col>
-            <el-col :xs="24" :sm="12">
+            <el-col :sm="12" :xs="24">
               <div class="user-visits">
                 <el-row style="margin-bottom: .7rem">
-                  <el-col :span="4" :offset="4">{{ $t('common.todayIp') }}</el-col>
-                  <el-col :span="4" :offset="4">{{ $t('common.todayVisit') }}</el-col>
-                  <el-col :span="4" :offset="4">{{ $t('common.TotalVisit') }}</el-col>
+                  <el-col :offset="4" :span="4">{{ $t('common.todayIp') }}</el-col>
+                  <el-col :offset="4" :span="4">{{ $t('common.todayVisit') }}</el-col>
+                  <el-col :offset="4" :span="4">{{ $t('common.TotalVisit') }}</el-col>
                 </el-row>
                 <el-row>
-                  <el-col :span="4" :offset="4" class="num">
+                  <el-col :offset="4" :span="4" class="num">
                     <el-link type="primary">
-                      <countTo :start-val="0" :end-val="todayIp" :duration="3000" />
+                      <countTo :duration="3000" :end-val="todayIp" :start-val="0" />
                     </el-link>
                   </el-col>
-                  <el-col :span="4" :offset="4" class="num">
+                  <el-col :offset="4" :span="4" class="num">
                     <el-link type="primary">
-                      <countTo :start-val="0" :end-val="todayVisit" :duration="3000" />
+                      <countTo :duration="3000" :end-val="todayVisit" :start-val="0" />
                     </el-link>
                   </el-col>
-                  <el-col :span="4" :offset="4" class="num">
+                  <el-col :offset="4" :span="4" class="num">
                     <el-link type="primary">
-                      <countTo :start-val="0" :end-val="totalVisit" :duration="3000" />
+                      <countTo :duration="3000" :end-val="totalVisit" :start-val="0" />
                     </el-link>
                   </el-col>
                 </el-row>
@@ -54,20 +52,15 @@
       </el-col>
     </el-row>
     <el-row :gutter="10">
-      <el-col :xs="24" :sm="12">
+      <el-col :sm="12" :xs="24">
         <div class="app-container">
           <div id="visit-count-chart" style="width: 100%;height: 20rem" />
         </div>
       </el-col>
-      <el-col :xs="24" :sm="12">
+      <el-col :sm="12" :xs="24">
         <div class="app-container project-wrapper">
           <div class="project-header">
-            <el-link
-              type="primary"
-              href="https://www.kancloud.cn/zuihou/zuihou-admin-cloud"
-              target="_blank"
-              style="float: right;"
-            >{{ $t('common.docDetails') }}</el-link>
+            <el-link href="https://www.kancloud.cn/zuihou/zuihou-admin-cloud" style="float: right;" target="_blank" type="primary">{{ $t('common.docDetails') }}</el-link>
           </div>
           <table>
             <tr>
@@ -231,110 +224,109 @@ export default {
       return `${time}, ${this.user.name}, ${welcomeArr[index]}`
     },
     initIndexData: function () {
-      dashboardApi.getVisitList({}).then((r) => {
-        if (r.isError) {
-          return
-        }
-        const data = r.data
-        this.todayIp = Number(data.todayIp)
-        this.totalVisit = Number(data.totalVisitCount)
-        this.todayVisit = Number(data.todayVisitCount)
-        const tenVisitCount = []
-        const dateArr = []
-        const tenUserVisitCount = []
+      dashboardApi.getVisitList({})
+        .then((response) => {
+          const res = response.data
+          const data = res.data
+          this.todayIp = Number(data.todayIp)
+          this.totalVisit = Number(data.totalVisitCount)
+          this.todayVisit = Number(data.todayVisitCount)
+          const tenVisitCount = []
+          const dateArr = []
+          const tenUserVisitCount = []
 
-        for (const index in data.lastTenVisitCount) {
-          for (const key in data.lastTenVisitCount[index]) {
-            dateArr.push(key)
-            tenVisitCount.push(data.lastTenVisitCount[index][key])
-            tenUserVisitCount.push(data.lastTenUserVisitCount[index][key])
+          for (const index in data.lastTenVisitCount) {
+            for (const key in data.lastTenVisitCount[index]) {
+              dateArr.push(key)
+              tenVisitCount.push(data.lastTenVisitCount[index][key])
+              tenUserVisitCount.push(data.lastTenUserVisitCount[index][key])
+            }
           }
-        }
-        this.chart = echarts.init(document.getElementById('visit-count-chart'))
-        const option = {
-          backgroundColor: '#FFF',
-          title: {
-            text: this.$t('common.visitTitle') + '\n',
-            textStyle: {
-              fontSize: 14
-            }
-          },
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-              type: 'shadow'
-            }
-          },
-          legend: {
-            data: [this.$t('common.you'), this.$t('common.total')],
-            top: '18'
-          },
-          grid: {
-            left: '3%',
-            right: '5%',
-            bottom: '3%',
-            containLabel: true,
-            show: false
-          },
-          toolbox: {
-            feature: {
-              dataView: { show: false, readOnly: false }
-            }
-          },
-          xAxis: {
-            type: 'category',
-            boundaryGap: true,
-            splitLine: {
+          this.chart = echarts.init(document.getElementById('visit-count-chart'))
+          const option = {
+            backgroundColor: '#FFF',
+            title: {
+              text: this.$t('common.visitTitle') + '\n',
+              textStyle: {
+                fontSize: 14
+              }
+            },
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'shadow'
+              }
+            },
+            legend: {
+              data: [this.$t('common.you'), this.$t('common.total')],
+              top: '18'
+            },
+            grid: {
+              left: '3%',
+              right: '5%',
+              bottom: '3%',
+              containLabel: true,
               show: false
             },
-            data: dateArr,
-            axisLine: {
-              lineStyle: {
-                color: '#333'
+            toolbox: {
+              feature: {
+                dataView: { show: false, readOnly: false }
               }
-            }
-          },
-          yAxis: [
-            {
-              type: 'value',
+            },
+            xAxis: {
+              type: 'category',
+              boundaryGap: true,
               splitLine: {
-                lineStyle: {
-                  type: 'dashed',
-                  color: '#DDD'
-                }
+                show: false
               },
+              data: dateArr,
               axisLine: {
-                show: false,
                 lineStyle: {
                   color: '#333'
                 }
-              },
-              nameTextStyle: {
-                color: '#999'
-              },
-              splitArea: {
-                show: false
               }
-            }],
-          series: [
-            {
-              name: this.$t('common.you'),
-              type: 'bar',
-              barWidth: '25%',
-              color: 'rgb(0, 227, 150)',
-              data: tenUserVisitCount
             },
-            {
-              name: this.$t('common.total'),
-              type: 'bar',
-              barWidth: '25%',
-              color: 'rgb(0, 143, 251)',
-              data: tenVisitCount
-            }
-          ]
-        }
-        this.chart.setOption(option)
-      })
+            yAxis: [
+              {
+                type: 'value',
+                splitLine: {
+                  lineStyle: {
+                    type: 'dashed',
+                    color: '#DDD'
+                  }
+                },
+                axisLine: {
+                  show: false,
+                  lineStyle: {
+                    color: '#333'
+                  }
+                },
+                nameTextStyle: {
+                  color: '#999'
+                },
+                splitArea: {
+                  show: false
+                }
+              }],
+            series: [
+              {
+                name: this.$t('common.you'),
+                type: 'bar',
+                barWidth: '25%',
+                color: 'rgb(0, 227, 150)',
+                data: tenUserVisitCount
+              },
+              {
+                name: this.$t('common.total'),
+                type: 'bar',
+                barWidth: '25%',
+                color: 'rgb(0, 143, 251)',
+                data: tenVisitCount
+              }
+            ]
+          }
+          this.chart.setOption(option)
+        })
     }
   }
 }

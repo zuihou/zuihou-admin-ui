@@ -56,7 +56,7 @@ function handleSuccess (res, resolve) {
       Message.error(res.data.msg)
     }
   }
-  resolve(res.data)
+  resolve(res)
 }
 
 // http请求

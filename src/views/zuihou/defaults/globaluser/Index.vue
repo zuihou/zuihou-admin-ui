@@ -1,79 +1,40 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input
-        v-model="queryParams.tenantCode"
-        :placeholder="$t(&quot;table.globalUser.tenantCode&quot;)"
-        class="filter-item search-item"
-      />
-      <el-input
-        v-model="queryParams.account"
-        :placeholder="$t(&quot;table.globalUser.account&quot;)"
-        class="filter-item search-item"
-      />
-      <el-input
-        v-model="queryParams.name"
-        :placeholder="$t(&quot;table.globalUser.name&quot;)"
-        class="filter-item search-item"
-      />
+      <el-input v-model="queryParams.tenantCode" :placeholder="$t(&quot;table.globalUser.tenantCode&quot;)" class="filter-item search-item" />
+      <el-input v-model="queryParams.account" :placeholder="$t(&quot;table.globalUser.account&quot;)" class="filter-item search-item" />
+      <el-input v-model="queryParams.name" :placeholder="$t(&quot;table.globalUser.name&quot;)" class="filter-item search-item" />
       <el-date-picker
         v-model="queryParams.timeRange"
         :range-separator="null"
         :start-placeholder="$t(&quot;table.createTime&quot;)"
-        value-format="yyyy-MM-dd HH:mm:ss"
-        format="yyyy-MM-dd HH:mm:ss"
         class="filter-item search-item date-range-item"
+        format="yyyy-MM-dd HH:mm:ss"
         type="daterange"
+        value-format="yyyy-MM-dd HH:mm:ss"
       />
-      <el-button class="filter-item" type="primary" plain @click="search">{{ $t('table.search') }}</el-button>
-      <el-button class="filter-item" type="warning" plain @click="reset">{{ $t('table.reset') }}</el-button>
-      <el-dropdown trigger="click" class="filter-item">
+      <el-button class="filter-item" plain type="primary" @click="search">{{ $t('table.search') }}</el-button>
+      <el-button class="filter-item" plain type="warning" @click="reset">{{ $t('table.reset') }}</el-button>
+      <el-dropdown class="filter-item" trigger="click">
         <el-button>
           {{ $t('table.more') }}
           <i class="el-icon-arrow-down el-icon--right" />
         </el-button>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item
-            icon="el-icon-circle-plus-outline"
-            @click.native="add"
-          >{{ $t('table.add') }}</el-dropdown-item>
-          <el-dropdown-item
-            icon="el-icon-delete"
-            @click.native="batchDelete"
-          >{{ $t('table.delete') }}</el-dropdown-item>
+          <el-dropdown-item icon="el-icon-circle-plus-outline" @click.native="add">{{ $t('table.add') }}</el-dropdown-item>
+          <el-dropdown-item icon="el-icon-delete" @click.native="batchDelete">{{ $t('table.delete') }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
 
-    <el-table
-      ref="table"
-      :key="tableKey"
-      v-loading="loading"
-      :data="tableData.records"
-      border
-      fit
-      style="width: 100%;"
-      @selection-change="onSelectChange"
-      @sort-change="sortChange"
-    >
-      <el-table-column type="selection" align="center" width="40px" />
-      <el-table-column
-        :label="$t(&quot;table.globalUser.tenantCode&quot;)"
-        prop="tenantCode"
-        :show-overflow-tooltip="true"
-        align="center"
-        width="100px"
-      >
+    <el-table :key="tableKey" ref="table" v-loading="loading" :data="tableData.records" border fit style="width: 100%;" @selection-change="onSelectChange" @sort-change="sortChange">
+      <el-table-column align="center" type="selection" width="40px" />
+      <el-table-column :label="$t(&quot;table.globalUser.tenantCode&quot;)" :show-overflow-tooltip="true" align="center" prop="tenantCode" width="100px">
         <template slot-scope="scope">
           <span>{{ scope.row.tenantCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        :label="$t(&quot;table.globalUser.account&quot;)"
-        prop="account"
-        :show-overflow-tooltip="true"
-        class-name="status-col"
-      >
+      <el-table-column :label="$t(&quot;table.globalUser.account&quot;)" :show-overflow-tooltip="true" class-name="status-col" prop="account">
         <template slot-scope="scope">
           <span>{{ scope.row.account }}</span>
         </template>
@@ -93,58 +54,25 @@
           <span>{{ scope.row.email }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        sortable
-        :label="$t(&quot;table.systemData&quot;)"
-        prop="readonly"
-        align="center"
-        width="120px"
-      >
+      <el-table-column :label="$t(&quot;table.systemData&quot;)" align="center" prop="readonly" sortable width="120px">
         <template slot-scope="scope">
           <span>{{ scope.row.readonly ? $t("common.yes") : $t("common.no") }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        sortable
-        :label="$t(&quot;table.createTime&quot;)"
-        prop="createTime"
-        align="center"
-        width="170px"
-      >
+      <el-table-column :label="$t(&quot;table.createTime&quot;)" align="center" prop="createTime" sortable width="170px">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        :label="$t(&quot;table.operation&quot;)"
-        align="center"
-        width="150px"
-        class-name="small-padding fixed-width"
-      >
+      <el-table-column :label="$t(&quot;table.operation&quot;)" align="center" class-name="small-padding fixed-width" width="150px">
         <template slot-scope="{row}">
           <i class="el-icon-edit table-operation" style="color: #2db7f5;" @click="edit(row)" />
-          <i
-            class="el-icon-delete table-operation"
-            style="color: #f50;"
-            @click="singleDelete(row)"
-          />
+          <i class="el-icon-delete table-operation" style="color: #f50;" @click="singleDelete(row)" />
         </template>
       </el-table-column>
     </el-table>
-    <pagination
-      v-show="tableData.total>0"
-      :total="Number(tableData.total)"
-      :page.sync="pagination.current"
-      :limit.sync="pagination.size"
-      @pagination="fetch"
-    />
-    <global-user-edit
-      ref="edit"
-      :dialog-visible="dialog.isVisible"
-      :title="dialog.title"
-      @success="editSuccess"
-      @close="editClose"
-    />
+    <pagination v-show="tableData.total>0" :limit.sync="pagination.size" :page.sync="pagination.current" :total="Number(tableData.total)" @pagination="fetch" />
+    <global-user-edit ref="edit" :dialog-visible="dialog.isVisible" :title="dialog.title" @close="editClose" @success="editSuccess" />
   </div>
 </template>
 
@@ -276,7 +204,8 @@ export default {
     },
     delete (tenantCode, ids) {
       globalUserApi.remove({ tenantCode: tenantCode, ids: ids })
-        .then((res) => {
+        .then((response) => {
+          const res = response.data
           if (res.isSuccess) {
             this.$message({
               message: this.$t('tips.deleteSuccess'),
@@ -309,11 +238,9 @@ export default {
         params.endCreateTime = this.queryParams.timeRange[1]
       }
       globalUserApi.findPage(params)
-        .then((r) => {
-          if (r.isError) {
-            return
-          }
-          this.tableData = r.data
+        .then((response) => {
+          const res = response.data
+          this.tableData = res.data
           this.loading = false
         })
     },

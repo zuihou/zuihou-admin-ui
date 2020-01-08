@@ -1,44 +1,19 @@
 <template>
-  <el-dialog
-    :title="title"
-    :width="width"
-    top="50px"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-    :visible.sync="isVisible"
-  >
-    <el-form
-      ref="form"
-      :model="globalUser"
-      :rules="rules"
-      label-position="right"
-      label-width="130px"
-    >
+  <el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :title="title" :visible.sync="isVisible" :width="width" top="50px">
+    <el-form ref="form" :model="globalUser" :rules="rules" label-position="right" label-width="130px">
       <el-form-item :label="$t(&quot;table.globalUser.tenantCode&quot;)" prop="tenantCode">
-        <el-select
-          v-model="globalUser.tenantCode"
-          placeholder="企业"
-          :disabled="type === &quot;edit&quot;"
-        >
-          <el-option
-            v-for="item in tenantList"
-            :key="item.code"
-            :label="item.name"
-            :value="item.code"
-          />
+        <el-select v-model="globalUser.tenantCode" :disabled="type === &quot;edit&quot;" placeholder="企业">
+          <el-option v-for="item in tenantList" :key="item.code" :label="item.name" :value="item.code" />
         </el-select>
       </el-form-item>
       <el-form-item :label="$t(&quot;table.globalUser.account&quot;)" prop="account">
         <el-input v-model="globalUser.account" :disabled="type === &quot;edit&quot;" />
       </el-form-item>
       <el-form-item :label="$t(&quot;table.globalUser.password&quot;)" prop="password">
-        <el-input v-model="globalUser.password" type="password" maxlength="64" />
+        <el-input v-model="globalUser.password" maxlength="64" type="password" />
       </el-form-item>
-      <el-form-item
-        :label="$t(&quot;table.globalUser.confirmPassword&quot;)"
-        prop="confirmPassword"
-      >
-        <el-input v-model="globalUser.confirmPassword" type="password" maxlength="64" />
+      <el-form-item :label="$t(&quot;table.globalUser.confirmPassword&quot;)" prop="confirmPassword">
+        <el-input v-model="globalUser.confirmPassword" maxlength="64" type="password" />
       </el-form-item>
       <el-form-item :label="$t(&quot;table.globalUser.name&quot;)" prop="name">
         <el-input v-model="globalUser.name" maxlength="50" />
@@ -51,8 +26,8 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="warning" plain @click="isVisible = false">{{ $t('common.cancel') }}</el-button>
-      <el-button type="primary" plain @click="submitForm">{{ $t('common.confirm') }}</el-button>
+      <el-button plain type="warning" @click="isVisible = false">{{ $t('common.cancel') }}</el-button>
+      <el-button plain type="primary" @click="submitForm">{{ $t('common.confirm') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -91,7 +66,8 @@ export default {
                   account: value
                 }
                 globalUserApi.check(checkData)
-                  .then((res) => {
+                  .then((response) => {
+                    const res = response.data
                     if (!res.data) {
                       callback(this.$t('rules.accountExist'))
                     } else {
@@ -129,9 +105,11 @@ export default {
   },
   methods: {
     initTenantList () {
-      tenantApi.list().then(res => {
-        this.tenantList = res.data
-      })
+      tenantApi.list()
+        .then((response) => {
+          const res = response.data
+          this.tenantList = res.data
+        })
     },
     initGlobalUser () {
       return {
@@ -176,10 +154,9 @@ export default {
     },
     save () {
       globalUserApi.save(this.globalUser)
-        .then(res => {
-          if (res.isError) {
-            return
-          }
+        .then((response) => {
+          // const res = response.data
+
           this.isVisible = false
           this.$message({
             message: this.$t('tips.createSuccess'),
@@ -190,10 +167,9 @@ export default {
     },
     update () {
       globalUserApi.update(this.globalUser)
-        .then(res => {
-          if (res.isError) {
-            return
-          }
+        .then((response) => {
+          // const res = response.data
+
           this.isVisible = false
           this.$message({
             message: this.$t('tips.updateSuccess'),

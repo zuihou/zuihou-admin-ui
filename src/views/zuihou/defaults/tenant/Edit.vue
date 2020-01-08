@@ -1,15 +1,8 @@
 <template>
-  <el-dialog
-    :title="title"
-    :width="width"
-    top="50px"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-    :visible.sync="isVisible"
-  >
+  <el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :title="title" :visible.sync="isVisible" :width="width" top="50px">
     <el-form ref="form" :model="tenant" :rules="rules" label-position="right" label-width="130px">
       <el-form-item :label="$t(&quot;table.tenant.code&quot;)" prop="code">
-        <el-tooltip class="item" effect="dark" placement="top-start" content="建议填写企业的简称">
+        <el-tooltip class="item" content="建议填写企业的简称" effect="dark" placement="top-start">
           <el-input v-model="tenant.code" :disabled="type === &quot;edit&quot;" />
         </el-tooltip>
       </el-form-item>
@@ -20,26 +13,20 @@
         <el-input v-model="tenant.duty" />
       </el-form-item>
       <el-form-item :label="$t(&quot;table.tenant.expirationTime&quot;)" prop="expirationTime">
-        <el-tooltip class="item" effect="dark" placement="top-start" content="企业试用有效期, 不填表示永久有效">
-          <el-date-picker
-            v-model="tenant.expirationTime"
-            format="yyyy-MM-dd HH:mm:ss"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
-            placeholder="企业试用有效期"
-          />
+        <el-tooltip class="item" content="企业试用有效期, 不填表示永久有效" effect="dark" placement="top-start">
+          <el-date-picker v-model="tenant.expirationTime" format="yyyy-MM-dd HH:mm:ss" placeholder="企业试用有效期" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" />
         </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t(&quot;table.tenant.logo&quot;)" prop="logo">
         <el-upload
-          class="avatar-uploader"
-          :headers="uploadFileHeaders"
-          :data="updateFileData"
           :action="uploadFileUrl"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :on-error="handleAvatarError"
           :before-upload="beforeAvatarUpload"
+          :data="updateFileData"
+          :headers="uploadFileHeaders"
+          :on-error="handleAvatarError"
+          :on-success="handleAvatarSuccess"
+          :show-file-list="false"
+          class="avatar-uploader"
         >
           <img v-if="tenant.logo" :src="tenant.logo" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon" />
@@ -49,14 +36,8 @@
         <el-input v-model="tenant.describe" type="textarea" />
       </el-form-item>
       <el-form-item :label="$t(&quot;table.tenant.passwordExpire&quot;)" prop="passwordExpire">
-        <el-tooltip class="item" effect="dark" placement="top-start" content="0表示永远不过期">
-          <el-input-number
-            v-model="tenant.passwordExpire"
-            controls-position="right"
-            :min="0"
-            :max="180"
-            placeholder="单位：天"
-          />
+        <el-tooltip class="item" content="0表示永远不过期" effect="dark" placement="top-start">
+          <el-input-number v-model="tenant.passwordExpire" :max="180" :min="0" controls-position="right" placeholder="单位：天" />
         </el-tooltip>天
       </el-form-item>
       <el-form-item :label="$t(&quot;table.tenant.isMultipleLogin&quot;)" prop="isMultipleLogin">
@@ -66,55 +47,22 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item :label="$t(&quot;table.tenant.passwordErrorNum&quot;)" prop="passwordErrorNum">
-        <el-tooltip
-          class="item"
-          effect="dark"
-          placement="top-start"
-          :content="passwordErrorNumTips"
-        >
-          <el-input-number
-            v-model="tenant.passwordErrorNum"
-            :min="1"
-            :max="30"
-            :placeholder="passwordErrorNumTips"
-          />
+        <el-tooltip :content="passwordErrorNumTips" class="item" effect="dark" placement="top-start">
+          <el-input-number v-model="tenant.passwordErrorNum" :max="30" :min="1" :placeholder="passwordErrorNumTips" />
         </el-tooltip>
       </el-form-item>
-      <el-form-item
-        :label="$t(&quot;table.tenant.passwordErrorLockTime&quot;)"
-        prop="passwordErrorLockTime"
-      >
-        <el-input-number
-          v-model="passwordErrorLockTime"
-          :disabled="passwordErrorLockTimeHidden"
-          :min="0"
-          :max="100000000000"
-          :placeholder="passwordErrorLockTimeTips"
-        />
-        <el-tooltip
-          class="item"
-          effect="dark"
-          placement="top-start"
-          :content="passwordErrorLockTimeTips"
-        >
-          <el-select
-            v-model="passwordErrorLockTimeUnit"
-            placeholder="单位"
-            @change="passwordErrorLockTimeUnitChange"
-          >
-            <el-option
-              v-for="item in passwordErrorLockTimeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+      <el-form-item :label="$t(&quot;table.tenant.passwordErrorLockTime&quot;)" prop="passwordErrorLockTime">
+        <el-input-number v-model="passwordErrorLockTime" :disabled="passwordErrorLockTimeHidden" :max="100000000000" :min="0" :placeholder="passwordErrorLockTimeTips" />
+        <el-tooltip :content="passwordErrorLockTimeTips" class="item" effect="dark" placement="top-start">
+          <el-select v-model="passwordErrorLockTimeUnit" placeholder="单位" @change="passwordErrorLockTimeUnitChange">
+            <el-option v-for="item in passwordErrorLockTimeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-tooltip>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="warning" plain @click="isVisible = false">{{ $t('common.cancel') }}</el-button>
-      <el-button type="primary" plain @click="submitForm">{{ $t('common.confirm') }}</el-button>
+      <el-button plain type="warning" @click="isVisible = false">{{ $t('common.cancel') }}</el-button>
+      <el-button plain type="primary" @click="submitForm">{{ $t('common.confirm') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -167,13 +115,15 @@ export default {
                 if (!validCode(value)) {
                   callback('企业编码只能是字母、数字或_')
                 } else {
-                  tenantApi.check(value).then((res) => {
-                    if (res.data) {
-                      callback('编码已经存在')
-                    } else {
-                      callback()
-                    }
-                  })
+                  tenantApi.check(value)
+                    .then((response) => {
+                      const res = response.data
+                      if (res.data) {
+                        callback('编码已经存在')
+                      } else {
+                        callback()
+                      }
+                    })
                 }
               } else {
                 callback()
@@ -296,10 +246,9 @@ export default {
     },
     save () {
       tenantApi.save(this.tenant)
-        .then(res => {
-          if (res.isError) {
-            return
-          }
+        .then((response) => {
+          // const res = response.data
+
           this.isVisible = false
           this.$message({
             message: this.$t('tips.createSuccess'),
@@ -310,10 +259,8 @@ export default {
     },
     update () {
       tenantApi.update(this.tenant)
-        .then(res => {
-          if (res.isError) {
-            return
-          }
+        .then((response) => {
+          // const res = response.data
           this.isVisible = false
           this.$message({
             message: this.$t('tips.updateSuccess'),

@@ -21,14 +21,7 @@
         <a href="https://gitee.com/zuihou111/zuihou-admin-ui" target="_blank">zuihou-admin-ui</a>
       </div>
     </div>
-    <el-form
-      ref="loginForm"
-      :model="loginForm"
-      :rules="rules"
-      class="login-form"
-      autocomplete="off"
-      label-position="left"
-    >
+    <el-form ref="loginForm" :model="loginForm" :rules="rules" autocomplete="off" class="login-form" label-position="left">
       <div class="title-container">
         <h3 class="title">{{ $t('login.title') }}平台</h3>
         <lang-select class="set-language" />
@@ -39,10 +32,10 @@
             ref="account"
             v-model="loginForm.account"
             :placeholder="$t(&quot;login.username&quot;)"
-            prefix-icon="el-icon-user"
-            name="account"
-            type="text"
             autocomplete="off"
+            name="account"
+            prefix-icon="el-icon-user"
+            type="text"
             @keyup.enter.native="handleLogin"
           />
         </el-form-item>
@@ -50,40 +43,35 @@
           <el-input
             ref="password"
             v-model="loginForm.password"
+            :placeholder="$t(&quot;login.password&quot;)"
+            :show-password="true"
+            autocomplete="off"
+            name="password"
             prefix-icon="el-icon-key"
             type="password"
-            :placeholder="$t(&quot;login.password&quot;)"
-            name="password"
-            autocomplete="off"
-            :show-password="true"
             @keyup.enter.native="handleLogin"
           />
         </el-form-item>
-        <el-form-item prop="code" class="code-input">
+        <el-form-item class="code-input" prop="code">
           <el-input
             ref="code"
             v-model="loginForm.code"
-            prefix-icon="el-icon-lock"
             :placeholder="$t(&quot;login.code&quot;)"
-            name="code"
-            type="text"
             autocomplete="off"
+            name="code"
+            prefix-icon="el-icon-lock"
             style="width: 70%"
+            type="text"
             @keyup.enter.native="handleLogin"
           />
         </el-form-item>
         <img :src="imageCode" alt="codeImage" class="code-image" @click="getCodeImage">
-        <el-button
-          :loading="loading"
-          type="primary"
-          style="width:100%;margin-bottom:14px;"
-          @click.native.prevent="handleLogin"
-        >{{ $t('login.logIn') }}</el-button>
+        <el-button :loading="loading" style="width:100%;margin-bottom:14px;" type="primary" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
       </span>
     </el-form>
     <span class="login-footer">
       © 2019
-      <a target="_blank" href="https://github.com/zuihou">zuihou</a> - zuihou-admin-cloud
+      <a href="https://github.com/zuihou" target="_blank">zuihou</a> - zuihou-admin-cloud
     </span>
   </div>
 </template>
@@ -161,7 +149,8 @@ export default {
   methods: {
     getCodeImage () {
       loginApi.getCaptcha(this.randomId)
-        .then(res => {
+        .then((response) => {
+          const res = response.data
           if (res.byteLength <= 100) {
             this.$message({
               message: this.$t('tips.systemError'),
@@ -203,15 +192,16 @@ export default {
           ...that.authUser
         }
         params.token = null
-        that.$post('auth/social/bind/login', params).then((r) => {
-          const data = r.data.data
-          this.saveLoginData(data)
-          this.getUserDetailInfo()
-          this.loginSuccessCallback(that.loginForm.bindAccount)
-        }).catch((error) => {
-          console.error(error)
-          that.loading = false
-        })
+        that.$post('auth/social/bind/login', params)
+          .then((response) => {
+            const res = response.data
+            this.saveLoginData(res.data)
+            this.getUserDetailInfo()
+            this.loginSuccessCallback(that.loginForm.bindAccount)
+          }).catch((error) => {
+            console.error(error)
+            that.loading = false
+          })
       }
     },
 
@@ -227,7 +217,8 @@ export default {
         const that = this
         that.loginForm['key'] = that.randomId
         loginApi.login(this.loginForm)
-          .then(res => {
+          .then((response) => {
+            const res = response.data
             if (res.isSuccess) {
               that.saveLoginData(res.data.token)
               that.saveUserInfo(res.data.user)
@@ -288,7 +279,8 @@ export default {
     },
     loginSuccessCallback (user) {
       commonApi.enums()
-        .then(res => {
+        .then((response) => {
+          const res = response.data
           if (res.isSuccess) {
             this.$store.commit('common/setEnums', res.data)
           }
