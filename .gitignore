@@ -2,6 +2,7 @@
 node_modules/
 dist/
 zuihou-admin-ui/
+zuihou-admin-ui.zip
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
