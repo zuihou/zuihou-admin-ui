@@ -81,7 +81,6 @@ import LangSelect from '@/components/LangSelect'
 import db from '@/utils/localstorage'
 import { randomNum } from '@/utils'
 import loginApi from '@/api/Login.js'
-import commonApi from '@/api/Common.js'
 
 export default {
   name: 'Login',
@@ -244,7 +243,6 @@ export default {
     },
     saveUserInfo (user) {
       this.$store.commit('account/setUser', user)
-      // TODO 从后台拉取权限列表
       const permissions = [
         "user:view",
         "user:export",
@@ -278,13 +276,13 @@ export default {
       this.$store.commit('account/setPermissions', permissions)
     },
     loginSuccessCallback (user) {
-      commonApi.enums()
-        .then((response) => {
-          const res = response.data
-          if (res.isSuccess) {
-            this.$store.commit('common/setEnums', res.data)
-          }
-        })
+      // commonApi.enums()
+      //   .then((response) => {
+      //     const res = response.data
+      //     if (res.isSuccess) {
+      //       this.$store.commit('common/setEnums', res.data)
+      //     }
+      //   })
     }
   }
 }

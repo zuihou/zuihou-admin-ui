@@ -2,7 +2,20 @@ import axiosApi from './AxiosApi.js'
 
 const apiList = {
   // 获取当前系统的所有枚举
-  enums: '/gate/enums'
+  enums: {
+    authority: {
+      method: 'GET',
+      url: `/authority/enums`
+    },
+    msgs: {
+      method: 'GET',
+      url: `/msgs/enums`
+    },
+    file: {
+      method: 'GET',
+      url: `/file/enums`
+    }
+  }
 }
 
 export default {
@@ -15,10 +28,10 @@ export default {
       data
     })
   },
-  enums () {
+  enums (data, service = 'authority') {
     return axiosApi({
-      method: 'GET',
-      url: apiList.enums
+      ...apiList.enums[service],
+      data
     })
   }
 }

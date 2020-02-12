@@ -205,6 +205,7 @@ import Pagination from "@/components/Pagination"
 import TenantEdit from "./Edit"
 import TenantView from "./View"
 import tenantApi from "@/api/Tenant.js"
+import { initEnums } from '@/utils/commons.js'
 
 export default {
   name: "TenantManage",
@@ -244,6 +245,10 @@ export default {
       tableData: {
         total: 0
       },
+      enums: {
+        TenantTypeEnum: {},
+        TenantStatusEnum: {}
+      },
       pagination: {
         size: 10,
         current: 1
@@ -254,31 +259,29 @@ export default {
     currentUser () {
       return this.$store.state.account.user
     },
-    enum () {
-      return this.$store.state.common.enums
-    },
     typeFilterList () {
       const list = []
-      for (const key in this.enum.TenantTypeEnum) {
+      for (const key in this.enums.TenantTypeEnum) {
         list.push({
           value: key,
-          text: this.enum.TenantTypeEnum[key]
+          text: this.enums.TenantTypeEnum[key]
         })
       }
       return list
     },
     statusFilterList () {
       const list = []
-      for (const key in this.enum.TenantStatusEnum) {
+      for (const key in this.enums.TenantStatusEnum) {
         list.push({
           value: key,
-          text: this.enum.TenantStatusEnum[key]
+          text: this.enums.TenantStatusEnum[key]
         })
       }
       return list
     }
   },
   mounted () {
+    initEnums(['TenantStatusEnum', 'TenantTypeEnum'], this.enums)
     this.fetch()
   },
   methods: {
