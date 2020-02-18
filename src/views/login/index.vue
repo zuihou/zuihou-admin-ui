@@ -219,7 +219,7 @@ export default {
           .then((response) => {
             const res = response.data
             if (res.isSuccess) {
-              that.saveLoginData(res.data.token)
+              that.saveLoginData(res.data['token'], res.data['expire'])
               that.saveUserInfo(res.data.user)
               that.loginSuccessCallback(res.data.user)
               that.$message({
@@ -235,10 +235,10 @@ export default {
           })
       }
     },
-    saveLoginData (token) {
-      this.$store.commit('account/setToken', token.token)
+    saveLoginData (token, expire) {
+      this.$store.commit('account/setToken', token)
       const current = new Date()
-      const expireTime = current.setTime(current.getTime() + 1000 * token.expire)
+      const expireTime = current.setTime(current.getTime() + 1000 * expire)
       this.$store.commit('account/setExpireTime', expireTime)
     },
     saveUserInfo (user) {
