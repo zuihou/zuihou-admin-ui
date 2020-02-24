@@ -5,7 +5,11 @@ const db = {
   },
   get (key, defaultValue = {}) {
     const projectName = process.env.VUE_APP_PROJECT_NAME
-    return JSON.parse(localStorage.getItem(projectName + "_" + key)) || defaultValue
+    try {
+      return JSON.parse(localStorage.getItem(projectName + "_" + key)) || defaultValue
+    } catch (err) {
+      return defaultValue
+    }
   },
   remove (key) {
     const projectName = process.env.VUE_APP_PROJECT_NAME
