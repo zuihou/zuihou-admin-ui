@@ -23,14 +23,12 @@ export default {
   login (data) {
     return axiosApi({
       ...apiList.login,
-      // formData: true,
       data
     })
   },
   getRouter (data) {
     return axiosApi({
       ...apiList.getRouter,
-      formData: true,
       data: data || {}
     })
   }

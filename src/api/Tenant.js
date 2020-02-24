@@ -29,7 +29,6 @@ export default {
     return axiosApi({
       method: 'GET',
       url: apiList.findTenantPage,
-      formData: true,
       data
     })
   },

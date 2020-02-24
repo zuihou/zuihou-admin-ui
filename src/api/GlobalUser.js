@@ -27,7 +27,6 @@ export default {
   findPage (data) {
     return axiosApi({
       ...apiList.findPage,
-      formData: true,
       data
     })
   },
