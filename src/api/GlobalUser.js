@@ -1,9 +1,9 @@
 import axiosApi from './AxiosApi.js'
 
 const apiList = {
-  findPage: {
+  page: {
     url: `/authority/globalUser/page`,
-    method: 'GET'
+    method: 'POST'
   },
   save: {
     method: 'POST',
@@ -20,13 +20,25 @@ const apiList = {
   check: {
     method: 'GET',
     url: `/authority/globalUser/check`
+  },
+  preview: {
+    method: 'POST',
+    url: `/authority/globalUser/preview`
+  },
+  export: {
+    method: 'POST',
+    url: `/authority/globalUser/export`
+  },
+  import: {
+    method: 'POST',
+    url: `/authority/globalUser/import`
   }
 }
 
 export default {
-  findPage (data) {
+  page (data) {
     return axiosApi({
-      ...apiList.findPage,
+      ...apiList.page,
       data
     })
   },
@@ -53,6 +65,25 @@ export default {
       ...apiList.check,
       formData: true,
       data: data || {}
+    })
+  },
+  preview (data) {
+    return axiosApi({
+      ...apiList.preview,
+      data
+    })
+  },
+  export (data) {
+    return axiosApi({
+      ...apiList.export,
+      responseType: "blob",
+      data
+    })
+  },
+  import (data) {
+    return axiosApi({
+      ...apiList.import,
+      data
     })
   }
 }

@@ -2,12 +2,12 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input
-        v-model="queryParams.code"
+        v-model="queryParams.model.code"
         :placeholder="$t('table.tenant.code')"
         class="filter-item search-item"
       />
       <el-input
-        v-model="queryParams.name"
+        v-model="queryParams.model.name"
         :placeholder="$t('table.tenant.name')"
         class="filter-item search-item"
       />
@@ -20,25 +20,24 @@
         type="daterange"
         value-format="yyyy-MM-dd HH:mm:ss"
       />
-      <el-button class="filter-item" plain type="primary" @click="search">{{
-        $t("table.search")
-      }}</el-button>
-      <el-button class="filter-item" plain type="warning" @click="reset">{{
-        $t("table.reset")
-      }}</el-button>
+      <el-button class="filter-item" plain type="primary" @click="search">
+        {{ $t("table.search") }}
+      </el-button>
+      <el-button class="filter-item" plain type="warning" @click="reset">
+        {{ $t("table.reset") }}
+      </el-button>
+      <el-button class="filter-item" plain type="danger" @click="add">
+        {{ $t("table.add") }}
+      </el-button>
       <el-dropdown class="filter-item" trigger="click">
         <el-button>
           {{ $t("table.more") }}
           <i class="el-icon-arrow-down el-icon--right" />
         </el-button>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item
-            icon="el-icon-circle-plus-outline"
-            @click.native="add"
-          >{{ $t("table.add") }}</el-dropdown-item>
-          <el-dropdown-item icon="el-icon-delete" @click.native="batchDelete">{{
-            $t("table.delete")
-          }}</el-dropdown-item>
+          <el-dropdown-item icon="el-icon-delete" @click.native="batchDelete">{{ $t("table.delete") }}</el-dropdown-item>
+          <el-dropdown-item @click.native="exportExcel">{{ $t("table.export") }}</el-dropdown-item>
+          <el-dropdown-item @click.native="exportExcelPreview">{{ $t("table.exportPreview") }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -50,11 +49,14 @@
       :data="tableData.records"
       border
       fit
+      row-key="id"
       style="width: 100%;"
+      @filter-change="filterChange"
       @selection-change="onSelectChange"
       @sort-change="sortChange"
+      @cell-click="cellClick"
     >
-      <el-table-column align="center" type="selection" width="40px" />
+      <el-table-column align="center" type="selection" width="40px" :reserve-selection="true" />
       <el-table-column
         :label="$t('table.tenant.code')"
         :show-overflow-tooltip="true"
@@ -86,9 +88,9 @@
         </template>
       </el-table-column>
       <el-table-column
-        :filter-method="typeFilterHandler"
         :filter-multiple="false"
         :filters="typeFilterList"
+        column-key="type.code"
         :label="$t('table.tenant.type')"
         :show-overflow-tooltip="true"
         align="center"
@@ -102,8 +104,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        :filter-method="statusFilterHandler"
         :filter-multiple="false"
+        column-key="status"
         :filters="statusFilterList"
         :label="$t('table.tenant.status')"
         :show-overflow-tooltip="true"
@@ -180,8 +182,8 @@
     </el-table>
     <pagination
       v-show="tableData.total > 0"
-      :limit.sync="pagination.size"
-      :page.sync="pagination.current"
+      :limit.sync="queryParams.size"
+      :page.sync="queryParams.current"
       :total="Number(tableData.total)"
       @pagination="fetch"
     />
@@ -197,6 +199,19 @@
       :dialog-visible="tenantViewVisible"
       @close="viewClose"
     />
+    <el-dialog
+      v-el-drag-dialog
+      :close-on-click-modal="false"
+      :close-on-press-escape="true"
+      title="预览"
+      width="80%"
+      top="50px"
+      :visible.sync="preview.isVisible"
+    >
+      <el-scrollbar>
+        <div v-html="preview.context" />
+      </el-scrollbar>
+    </el-dialog>
   </div>
 </template>
 
@@ -205,10 +220,11 @@ import Pagination from "@/components/Pagination"
 import TenantEdit from "./Edit"
 import TenantView from "./View"
 import tenantApi from "@/api/Tenant.js"
-import { initEnums } from '@/utils/commons.js'
-
+import elDragDialog from '@/directive/el-drag-dialog'
+import { downloadFile, initEnums, initQueryParams } from '@/utils/commons'
 export default {
   name: "TenantManage",
+  directives: { elDragDialog },
   components: { Pagination, TenantEdit, TenantView },
   filters: {
     typeFilter (status) {
@@ -234,13 +250,14 @@ export default {
         isVisible: false,
         title: ""
       },
+      preview: {
+        isVisible: false,
+        context: ''
+      },
       tenantViewVisible: false,
       tableKey: 0,
-      total: 0,
-      queryParams: {},
-      sort: {},
+      queryParams: initQueryParams({}),
       selection: [],
-      // 以下已修改
       loading: false,
       tableData: {
         total: 0
@@ -248,10 +265,6 @@ export default {
       enums: {
         TenantTypeEnum: {},
         TenantStatusEnum: {}
-      },
-      pagination: {
-        size: 10,
-        current: 1
       }
     }
   },
@@ -285,14 +298,6 @@ export default {
     this.fetch()
   },
   methods: {
-    typeFilterHandler (value, row, column) {
-      const property = column["property"]
-      return row[property]["code"] === value
-    },
-    statusFilterHandler (value, row, column) {
-      const property = column["property"]
-      return row[property]["code"] === value
-    },
     viewClose () {
       this.tenantViewVisible = false
     },
@@ -307,16 +312,36 @@ export default {
     },
     search () {
       this.fetch({
-        ...this.queryParams,
-        ...this.sort
+        ...this.queryParams
       })
     },
     reset () {
-      this.queryParams = {}
-      this.sort = {}
+      this.queryParams = initQueryParams({})
       this.$refs.table.clearSort()
       this.$refs.table.clearFilter()
       this.search()
+    },
+    exportExcelPreview () {
+      if (this.queryParams.timeRange) {
+        this.queryParams.map.createTime_st = this.queryParams.timeRange[0]
+        this.queryParams.map.createTime_ed = this.queryParams.timeRange[1]
+      }
+      this.queryParams.map.fileName = '导出用户数据'
+      tenantApi.preview(this.queryParams).then(response => {
+        const res = response.data
+        this.preview.isVisible = true
+        this.preview.context = res.data
+      })
+    },
+    exportExcel () {
+      if (this.queryParams.timeRange) {
+        this.queryParams.map.createTime_st = this.queryParams.timeRange[0]
+        this.queryParams.map.createTime_ed = this.queryParams.timeRange[1]
+      }
+      this.queryParams.map.fileName = '导出用户数据'
+      tenantApi.export(this.queryParams).then(response => {
+        downloadFile(response)
+      })
     },
     add () {
       this.$refs.edit.type = "add"
@@ -324,6 +349,7 @@ export default {
       this.dialog.isVisible = true
     },
     singleDelete (row) {
+      this.$refs.table.clearSelection()
       this.$refs.table.toggleRowSelection(row, true)
       this.batchDelete()
     },
@@ -408,22 +434,56 @@ export default {
     },
     fetch (params = {}) {
       this.loading = true
-      params.size = this.pagination.size
-      params.current = this.pagination.current
       if (this.queryParams.timeRange) {
-        params.startCreateTime = this.queryParams.timeRange[0]
-        params.endCreateTime = this.queryParams.timeRange[1]
+        this.queryParams.map.createTime_st = this.queryParams.timeRange[0]
+        this.queryParams.map.createTime_ed = this.queryParams.timeRange[1]
       }
-      tenantApi.findTenantPage(params).then(response => {
+
+      this.queryParams.current = params.current ? params.current : this.queryParams.current
+      this.queryParams.size = params.size ? params.size : this.queryParams.size
+
+      tenantApi.page(this.queryParams).then(response => {
         const res = response.data
-        this.tableData = res.data
-        this.loading = false
-      })
+        if (res.isSuccess) {
+          this.tableData = res.data
+        }
+        // eslint-disable-next-line no-return-assign
+      }).finally(() => this.loading = false)
     },
     sortChange (val) {
-      this.sort.field = val.prop
-      this.sort.order = val.order
+      this.queryParams.sort = val.prop
+      this.queryParams.order = val.order
+      if (this.queryParams.sort) {
+        this.search()
+      }
+    },
+    filterChange (filters) {
+      for (const key in filters) {
+        if (key.includes('.')) {
+          const val = {}
+          val[key.split('.')[1]] = filters[key][0]
+          this.queryParams.model[key.split('.')[0]] = val
+        } else {
+          this.queryParams.model[key] = filters[key][0]
+        }
+      }
       this.search()
+    },
+    cellClick (row, column) {
+      if (column['columnKey'] === "operation") {
+        return
+      }
+      let flag = false
+      this.selection.forEach((item) => {
+        if (item.id === row.id) {
+          flag = true
+          this.$refs.table.toggleRowSelection(row)
+        }
+      })
+
+      if (!flag) {
+        this.$refs.table.toggleRowSelection(row, true)
+      }
     }
   }
 }

@@ -146,6 +146,7 @@ export default {
     more: 'More',
     add: 'Add',
     export: 'Export',
+    exportPreview: 'exportPreview',
     import: 'Import',
     templateDownload: 'Template Download',
     delete: 'Delete',

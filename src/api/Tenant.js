@@ -1,7 +1,10 @@
 import axiosApi from './AxiosApi.js'
 
 const apiList = {
-  findTenantPage: `/authority/tenant/page`,
+  page: {
+    method: 'POST',
+    url: `/authority/tenant/page`
+  },
   update: {
     method: 'PUT',
     url: `/authority/tenant`
@@ -21,14 +24,25 @@ const apiList = {
   list: {
     method: 'GET',
     url: `/authority/tenant`
+  },
+  preview: {
+    method: 'POST',
+    url: `/authority/tenant/preview`
+  },
+  export: {
+    method: 'POST',
+    url: `/authority/tenant/export`
+  },
+  import: {
+    method: 'POST',
+    url: `/authority/tenant/import`
   }
 }
 
 export default {
-  findTenantPage (data) {
+  page (data) {
     return axiosApi({
-      method: 'GET',
-      url: apiList.findTenantPage,
+      ...apiList.page,
       data
     })
   },
@@ -67,6 +81,25 @@ export default {
     return axiosApi({
       method: 'GET',
       url: `/authority/tenant/check/${code}`
+    })
+  },
+  preview (data) {
+    return axiosApi({
+      ...apiList.preview,
+      data
+    })
+  },
+  export (data) {
+    return axiosApi({
+      ...apiList.export,
+      responseType: "blob",
+      data
+    })
+  },
+  import (data) {
+    return axiosApi({
+      ...apiList.import,
+      data
     })
   }
 }

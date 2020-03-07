@@ -146,6 +146,7 @@ export default {
     more: '更多操作',
     add: '添加',
     export: '导出',
+    exportPreview: '导出预览',
     import: '导入',
     templateDownload: '模板下载',
     delete: '删除',
