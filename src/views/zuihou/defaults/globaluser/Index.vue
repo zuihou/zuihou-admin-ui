@@ -76,7 +76,7 @@
           <span>{{ scope.row.readonly ? $t("common.yes") : $t("common.no") }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.createTime')" align="center" prop="createTime" sortable width="170px">
+      <el-table-column :label="$t('table.createTime')" align="center" prop="createTime" sortable="custom" width="170px">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>

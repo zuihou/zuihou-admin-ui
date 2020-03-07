@@ -19,7 +19,7 @@ const apiList = {
   },
   remove: {
     method: 'DELETE',
-    url: `/authority/tenant/remove`
+    url: `/authority/tenant`
   },
   list: {
     method: 'GET',

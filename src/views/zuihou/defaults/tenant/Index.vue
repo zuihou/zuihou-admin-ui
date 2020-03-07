@@ -148,7 +148,7 @@
         :label="$t('table.createTime')"
         align="center"
         prop="createTime"
-        sortable
+        sortable="custom"
         width="170px"
       >
         <template slot-scope="scope">
@@ -158,6 +158,7 @@
       <el-table-column
         :label="$t('table.operation')"
         align="center"
+        column-key="operation"
         class-name="small-padding fixed-width"
         width="150px"
       >
@@ -344,6 +345,14 @@ export default {
       })
     },
     add () {
+      if (this.tableData.total > 20) {
+        this.$message({
+          message: '演示环境有限，最多支持创建20个租户，请在现有租户下创建用户进行测试',
+          type: "warning",
+          duration: 5000
+        })
+        return
+      }
       this.$refs.edit.type = "add"
       this.dialog.title = this.$t("common.add")
       this.dialog.isVisible = true
@@ -362,9 +371,9 @@ export default {
         return
       }
 
-      const isReadonly = this.selection.findIndex(item => item.readonly)
+      const readonlyIndex = this.selection.findIndex(item => item.readonly)
 
-      if (isReadonly) {
+      if (readonlyIndex > -1) {
         this.$message({
           message: this.$t("tips.systemData"),
           type: "warning"
