@@ -22,8 +22,8 @@ const apiList = {
     url: `/authority/tenant`
   },
   list: {
-    method: 'GET',
-    url: `/authority/tenant`
+    method: 'POST',
+    url: `/authority/tenant/query`
   },
   preview: {
     method: 'POST',
