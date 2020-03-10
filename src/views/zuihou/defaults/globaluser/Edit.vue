@@ -155,27 +155,29 @@ export default {
     save () {
       globalUserApi.save(this.globalUser)
         .then((response) => {
-          // const res = response.data
-
-          this.isVisible = false
-          this.$message({
-            message: this.$t('tips.createSuccess'),
-            type: 'success'
-          })
-          this.$emit('success')
+          const res = response.data
+          if (res.isSuccess) {
+            this.isVisible = false
+            this.$message({
+              message: this.$t('tips.createSuccess'),
+              type: 'success'
+            })
+            this.$emit('success')
+          }
         })
     },
     update () {
       globalUserApi.update(this.globalUser)
         .then((response) => {
-          // const res = response.data
-
-          this.isVisible = false
-          this.$message({
-            message: this.$t('tips.updateSuccess'),
-            type: 'success'
-          })
-          this.$emit('success')
+          const res = response.data
+          if (res.isSuccess) {
+            this.isVisible = false
+            this.$message({
+              message: this.$t('tips.updateSuccess'),
+              type: 'success'
+            })
+            this.$emit('success')
+          }
         })
     },
     reset () {

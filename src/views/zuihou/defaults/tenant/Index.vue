@@ -98,7 +98,7 @@
         width="80px"
       >
         <template slot-scope="{ row }">
-          <el-tag :type="row.type.code | typeFilter">{{
+          <el-tag :type="row.type ? row.type.code :'' | typeFilter">{{
             row.type.desc
           }}</el-tag>
         </template>
@@ -114,7 +114,7 @@
         width="90px"
       >
         <template slot-scope="{ row }">
-          <el-tag :type="row.status.code | statusFilter">{{
+          <el-tag :type="row.status ? row.status.code :row.status | statusFilter">{{
             row.status.desc
           }}</el-tag>
         </template>

@@ -247,26 +247,29 @@ export default {
     save () {
       tenantApi.save(this.tenant)
         .then((response) => {
-          // const res = response.data
-
-          this.isVisible = false
-          this.$message({
-            message: this.$t('tips.createSuccess'),
-            type: 'success'
-          })
-          this.$emit('success')
+          const res = response.data
+          if (res.isSuccess) {
+            this.isVisible = false
+            this.$message({
+              message: this.$t('tips.createSuccess'),
+              type: 'success'
+            })
+            this.$emit('success')
+          }
         })
     },
     update () {
       tenantApi.update(this.tenant)
         .then((response) => {
-          // const res = response.data
-          this.isVisible = false
-          this.$message({
-            message: this.$t('tips.updateSuccess'),
-            type: 'success'
-          })
-          this.$emit('success')
+          const res = response.data
+          if (res.isSuccess) {
+            this.isVisible = false
+            this.$message({
+              message: this.$t('tips.updateSuccess'),
+              type: 'success'
+            })
+            this.$emit('success')
+          }
         })
     },
     reset () {
