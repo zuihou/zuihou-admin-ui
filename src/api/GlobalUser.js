@@ -15,7 +15,7 @@ const apiList = {
   },
   remove: {
     method: 'DELETE',
-    url: `/authority/globalUser/remove`
+    url: `/authority/globalUser/delete`
   },
   check: {
     method: 'GET',

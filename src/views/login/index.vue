@@ -87,7 +87,6 @@ export default {
   components: { LangSelect },
   data () {
     return {
-      tabActiveName: 'bindLogin',
       login: {
         type: 'up'
       },
@@ -102,6 +101,9 @@ export default {
       loginForm: {
         account: 'demoAdmin',
         password: 'zuihou',
+        key: '',
+        code: '',
+        grantType: 'captcha',
         bindAccount: '',
         bindPassword: '',
         signAccount: '',
@@ -176,34 +178,6 @@ export default {
           }
         })
     },
-
-    bindLogin () {
-      let account_c = false
-      let password_c = false
-      this.$refs.loginForm.validateField('bindAccount', e => { if (!e) { account_c = true } })
-      this.$refs.loginForm.validateField('bindPassword', e => { if (!e) { password_c = true } })
-      if (account_c && password_c) {
-        this.loading = true
-        const that = this
-        const params = {
-          bindAccount: that.loginForm.bindAccount,
-          bindPassword: that.loginForm.bindPassword,
-          ...that.authUser
-        }
-        params.token = null
-        that.$post('auth/social/bind/login', params)
-          .then((response) => {
-            const res = response.data
-            this.saveLoginData(res.data)
-            this.getUserDetailInfo()
-            this.loginSuccessCallback(that.loginForm.bindAccount)
-          }).catch((error) => {
-            console.error(error)
-            that.loading = false
-          })
-      }
-    },
-
     handleLogin () {
       let account_c = false
       let password_c = false
@@ -219,70 +193,38 @@ export default {
           .then((response) => {
             const res = response.data
             if (res.isSuccess) {
-              that.saveLoginData(res.data['token'], res.data['expire'])
-              that.saveUserInfo(res.data.user)
-              that.loginSuccessCallback(res.data.user)
+              that.saveLoginData(res.data['token'], res.data['refreshToken'], res.data['expiration'])
+              that.saveUserInfo(res.data)
               that.$message({
                 message: this.$t('tips.loginSuccess'),
                 type: 'success'
               })
-              that.loading = false
               that.$router.push('/')
             } else {
               that.loading = false
               that.getCodeImage()
             }
+          }).finally(() => {
+            that.loading = false
+            return true
           })
       }
     },
-    saveLoginData (token, expire) {
+    saveLoginData (token, refreshToken, expire) {
       this.$store.commit('account/setToken', token)
-      const current = new Date()
-      const expireTime = current.setTime(current.getTime() + 1000 * expire)
-      this.$store.commit('account/setExpireTime', expireTime)
+      this.$store.commit("account/setRefreshToken", refreshToken)
+      this.$store.commit('account/setExpireTime', expire)
     },
     saveUserInfo (user) {
-      this.$store.commit('account/setUser', user)
-      const permissions = [
-        "user:view",
-        "user:export",
-        "role:view",
-        "role:add",
-        "role:export",
-        "menu:view",
-        "menu:add",
-        "menu:export",
-        "dept:view",
-        "dept:add",
-        "dept:export",
-        "client:view",
-        "client:add",
-        "client:decrypt",
-        "log:view",
-        "log:export",
-        "monitor:loginlog",
-        "loginlog:export",
-        "monitor:register",
-        "monitor:zipkin",
-        "monitor:kibana",
-        "mobitor:admin",
-        "monitor:swagger",
-        "grafana:view",
-        "gen:config",
-        "gen:generate",
-        "gen:generate:gen",
-        "others:eximport"
-      ]
-      this.$store.commit('account/setPermissions', permissions)
+      this.$store.commit("account/setUser", {
+        id: user.userId,
+        account: user.account,
+        name: user.name,
+        avatar: user.avatar,
+        workDescribe: user.workDescribe
+      })
     },
     loginSuccessCallback (user) {
-      // commonApi.enums()
-      //   .then((response) => {
-      //     const res = response.data
-      //     if (res.isSuccess) {
-      //       this.$store.commit('common/setEnums', res.data)
-      //     }
-      //   })
     }
   }
 }

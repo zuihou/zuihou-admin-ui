@@ -71,6 +71,7 @@ import commonApi from '@/api/Common.js'
 import db from '@/utils/localstorage'
 import tenantApi from '@/api/Tenant.js'
 import { validCode } from '@/utils/my-validate'
+import { Base64 } from 'js-base64'
 
 export default {
   name: 'TenantEdit',
@@ -174,8 +175,9 @@ export default {
     },
     uploadFileHeaders () {
       return {
-        'token': db.get('TOKEN', ''),
-        'tenant': db.get('TENANT', '')
+        token: 'Bearer ' + db.get("TOKEN", ""),
+        tenant: db.get("TENANT", "") || "",
+        Authorization: `Basic ${Base64.encode(`${process.env.VUE_APP_CLIENT_ID}:${process.env.VUE_APP_CLIENT_SECRET}`)}`
       }
     },
     passwordErrorLockTimeComputed () {

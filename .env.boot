@@ -10,6 +10,12 @@ VUE_APP_DEV_REQUEST_DOMAIN_PREFIX = 'http://42.202.130.216:10000'
 # 请求域名前缀， 该变量仅仅生产环境需要设置
 VUE_APP_PROD_REQUEST_DOMAIN_PREFIX = 'http://42.202.130.216:10000'
 
+# 是否启用验证码
+VUE_APP_IS_CAPTCHA = true
+# 客户端秘钥
+VUE_APP_CLIENT_ID=zuihou_admin_ui
+VUE_APP_CLIENT_SECRET=zuihou_admin_ui_secret
+
 
 # base api
 VUE_APP_BASE_API = '/api'

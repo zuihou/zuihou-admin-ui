@@ -1,7 +1,15 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="queryParams.model.tenantCode" :placeholder="$t('table.globalUser.tenantCode')" class="filter-item search-item" />
+      <el-select
+        v-model="queryParams.model.tenantCode"
+        clearable
+        :placeholder="$t('table.globalUser.tenantCode')"
+        class="filter-item search-item"
+      >
+        <el-option key="1" label="超管" value="admin" />
+        <el-option v-for="(item, key, index) in tenantList" :key="index" :label="item.name" :value="item.code" />
+      </el-select>
       <el-input v-model="queryParams.model.account" :placeholder="$t('table.globalUser.account')" class="filter-item search-item" />
       <el-input v-model="queryParams.model.name" :placeholder="$t('table.globalUser.name')" class="filter-item search-item" />
       <el-date-picker
@@ -46,11 +54,6 @@
       @cell-click="cellClick"
     >
       <el-table-column align="center" type="selection" width="40px" :reserve-selection="true" />
-      <el-table-column :label="$t('table.globalUser.tenantCode')" :show-overflow-tooltip="true" align="center" prop="tenantCode" width="100px">
-        <template slot-scope="scope">
-          <span>{{ scope.row.tenantCode }}</span>
-        </template>
-      </el-table-column>
       <el-table-column :label="$t('table.globalUser.account')" :show-overflow-tooltip="true" class-name="status-col" prop="account">
         <template slot-scope="scope">
           <span>{{ scope.row.account }}</span>
@@ -110,6 +113,7 @@
 import Pagination from '@/components/Pagination'
 import GlobalUserEdit from './Edit'
 import globalUserApi from '@/api/GlobalUser.js'
+import tenantApi from '@/api/Tenant.js'
 import elDragDialog from '@/directive/el-drag-dialog'
 import { downloadFile, initQueryParams } from '@/utils/commons'
 
@@ -128,7 +132,12 @@ export default {
         context: ''
       },
       tableKey: 0,
-      queryParams: initQueryParams({}),
+      tenantList: [],
+      queryParams: initQueryParams({
+        model: {
+          tenantCode: 'admin'
+        }
+      }),
       selection: [],
       loading: false,
       tableData: {
@@ -143,8 +152,17 @@ export default {
   },
   mounted () {
     this.fetch()
+    this.loadTenantList()
   },
   methods: {
+    loadTenantList () {
+      tenantApi.list().then(response => {
+        const res = response.data
+        if (res.isSuccess) {
+          this.tenantList = res.data
+        }
+      })
+    },
     editClose () {
       this.dialog.isVisible = false
     },
@@ -160,7 +178,11 @@ export default {
       })
     },
     reset () {
-      this.queryParams = initQueryParams({})
+      this.queryParams = initQueryParams({
+        model: {
+          tenantCode: 'admin'
+        }
+      })
       this.$refs.table.clearSort()
       this.$refs.table.clearFilter()
       this.search()
@@ -170,7 +192,7 @@ export default {
         this.queryParams.map.createTime_st = this.queryParams.timeRange[0]
         this.queryParams.map.createTime_ed = this.queryParams.timeRange[1]
       }
-      this.queryParams.map.fileName = '导出用户数据'
+      this.queryParams.map.fileName = `导出租户${this.queryParams.model.tenantCode}的用户数据`
       globalUserApi.preview(this.queryParams).then(response => {
         const res = response.data
         this.preview.isVisible = true
@@ -182,12 +204,15 @@ export default {
         this.queryParams.map.createTime_st = this.queryParams.timeRange[0]
         this.queryParams.map.createTime_ed = this.queryParams.timeRange[1]
       }
-      this.queryParams.map.fileName = '导出用户数据'
+      this.queryParams.map.fileName = `导出租户${this.queryParams.model.tenantCode}的用户数据`
       globalUserApi.export(this.queryParams).then(response => {
         downloadFile(response)
       })
     },
     add () {
+      this.$refs.edit.setGlobalUser({
+        tenantCode: this.queryParams.model.tenantCode
+      })
       this.$refs.edit.type = 'add'
       this.dialog.title = this.$t('common.add')
       this.dialog.isVisible = true
@@ -213,7 +238,6 @@ export default {
         let contain = false
         const userIds = []
         let isSystemData = false
-        const tenantCodeList = new Set()
         this.selection.forEach((item) => {
           if (item.id === this.currentUser.id) {
             contain = true
@@ -223,7 +247,6 @@ export default {
             isSystemData = true
             return
           }
-          tenantCodeList.add(item.tenantCode)
           userIds.push(item.id)
         })
         if (isSystemData) {
@@ -237,14 +260,8 @@ export default {
             type: 'warning'
           })
           this.clearSelections()
-        } else if (tenantCodeList.size > 1) {
-          this.$message({
-            message: '只能批量删除同一企业下的用户',
-            type: 'warning'
-          })
-          this.clearSelections()
         } else {
-          this.delete(Array.from(tenantCodeList)[0], userIds)
+          this.delete(this.queryParams.model.tenantCode, userIds)
         }
       }).catch(() => {
         this.clearSelections()
@@ -254,7 +271,6 @@ export default {
       this.$refs.table.clearSelection()
     },
     delete (tenantCode, ids) {
-      debugger
       globalUserApi.remove({ tenantCode: tenantCode, ids: ids })
         .then((response) => {
           const res = response.data

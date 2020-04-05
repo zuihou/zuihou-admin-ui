@@ -3,6 +3,7 @@
     <el-form ref="form" :model="globalUser" :rules="rules" label-position="right" label-width="130px">
       <el-form-item :label="$t(&quot;table.globalUser.tenantCode&quot;)" prop="tenantCode">
         <el-select v-model="globalUser.tenantCode" :disabled="type === &quot;edit&quot;" placeholder="企业">
+          <el-option key="1" label="超管" value="admin" />
           <el-option v-for="item in tenantList" :key="item.code" :label="item.name" :value="item.code" />
         </el-select>
       </el-form-item>
@@ -68,7 +69,7 @@ export default {
                 globalUserApi.check(checkData)
                   .then((response) => {
                     const res = response.data
-                    if (!res.data) {
+                    if (res.data) {
                       callback(this.$t('rules.accountExist'))
                     } else {
                       callback()
@@ -114,7 +115,7 @@ export default {
     initGlobalUser () {
       return {
         id: '',
-        tenantCode: '',
+        tenantCode: 'admin',
         name: '',
         account: '',
         mobile: '',
