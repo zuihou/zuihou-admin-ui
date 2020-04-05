@@ -35,34 +35,34 @@
       <el-form-item :label="$t(&quot;table.tenant.describe&quot;)" prop="describe">
         <el-input v-model="tenant.describe" type="textarea" />
       </el-form-item>
-      <el-form-item :label="$t(&quot;table.tenant.passwordExpire&quot;)" prop="passwordExpire">
-        <el-tooltip class="item" content="0表示永远不过期" effect="dark" placement="top-start">
-          <el-input-number v-model="tenant.passwordExpire" :max="180" :min="0" controls-position="right" placeholder="单位：天" />
-        </el-tooltip>天
-      </el-form-item>
-      <el-form-item :label="$t(&quot;table.tenant.isMultipleLogin&quot;)" prop="isMultipleLogin">
-        <el-radio-group v-model="tenant.isMultipleLogin">
-          <el-radio :label="true">{{ $t('common.yes') }}</el-radio>
-          <el-radio :label="false">{{ $t('common.no') }}</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item :label="$t(&quot;table.tenant.passwordErrorNum&quot;)" prop="passwordErrorNum">
-        <el-tooltip :content="passwordErrorNumTips" class="item" effect="dark" placement="top-start">
-          <el-input-number v-model="tenant.passwordErrorNum" :max="30" :min="1" :placeholder="passwordErrorNumTips" />
-        </el-tooltip>
-      </el-form-item>
-      <el-form-item :label="$t(&quot;table.tenant.passwordErrorLockTime&quot;)" prop="passwordErrorLockTime">
-        <el-input-number v-model="passwordErrorLockTime" :disabled="passwordErrorLockTimeHidden" :max="100000000000" :min="0" :placeholder="passwordErrorLockTimeTips" />
-        <el-tooltip :content="passwordErrorLockTimeTips" class="item" effect="dark" placement="top-start">
-          <el-select v-model="passwordErrorLockTimeUnit" placeholder="单位" @change="passwordErrorLockTimeUnitChange">
-            <el-option v-for="item in passwordErrorLockTimeOptions" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-tooltip>
-      </el-form-item>
+      <!--      <el-form-item :label="$t(&quot;table.tenant.passwordExpire&quot;)" prop="passwordExpire">-->
+      <!--        <el-tooltip class="item" content="0表示永远不过期" effect="dark" placement="top-start">-->
+      <!--          <el-input-number v-model="tenant.passwordExpire" :max="180" :min="0" controls-position="right" placeholder="单位：天" />-->
+      <!--        </el-tooltip>天-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item :label="$t(&quot;table.tenant.isMultipleLogin&quot;)" prop="isMultipleLogin">-->
+      <!--        <el-radio-group v-model="tenant.isMultipleLogin">-->
+      <!--          <el-radio :label="true">{{ $t('common.yes') }}</el-radio>-->
+      <!--          <el-radio :label="false">{{ $t('common.no') }}</el-radio>-->
+      <!--        </el-radio-group>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item :label="$t(&quot;table.tenant.passwordErrorNum&quot;)" prop="passwordErrorNum">-->
+      <!--        <el-tooltip :content="passwordErrorNumTips" class="item" effect="dark" placement="top-start">-->
+      <!--          <el-input-number v-model="tenant.passwordErrorNum" :max="30" :min="1" :placeholder="passwordErrorNumTips" />-->
+      <!--        </el-tooltip>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item :label="$t(&quot;table.tenant.passwordErrorLockTime&quot;)" prop="passwordErrorLockTime">-->
+      <!--        <el-input-number v-model="passwordErrorLockTime" :disabled="passwordErrorLockTimeHidden" :max="100000000000" :min="0" :placeholder="passwordErrorLockTimeTips" />-->
+      <!--        <el-tooltip :content="passwordErrorLockTimeTips" class="item" effect="dark" placement="top-start">-->
+      <!--          <el-select v-model="passwordErrorLockTimeUnit" placeholder="单位" @change="passwordErrorLockTimeUnitChange">-->
+      <!--            <el-option v-for="item in passwordErrorLockTimeOptions" :key="item.value" :label="item.label" :value="item.value" />-->
+      <!--          </el-select>-->
+      <!--        </el-tooltip>-->
+      <!--      </el-form-item>-->
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button plain type="warning" @click="isVisible = false">{{ $t('common.cancel') }}</el-button>
-      <el-button plain type="primary" @click="submitForm">{{ $t('common.confirm') }}</el-button>
+      <el-button plain type="primary" :disabled="confirmDisabled" @click="submitForm">{{ $t('common.confirm') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -104,7 +104,7 @@ export default {
       tenant: this.initTenant(),
       screenWidth: 0,
       width: this.initWidth(),
-      depts: [],
+      confirmDisabled: false,
       roles: [],
       rules: {
         code: [
@@ -209,11 +209,11 @@ export default {
         duty: '',
         expirationTime: null,
         logo: '',
-        describe: '',
-        passwordExpire: 0,
-        isMultipleLogin: true,
-        passwordErrorNum: 10,
-        passwordErrorLockTime: '0'
+        describe: ''
+        // passwordExpire: 0,
+        // isMultipleLogin: true,
+        // passwordErrorNum: 10,
+        // passwordErrorLockTime: '0'
       }
     },
     initWidth () {
@@ -236,6 +236,7 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.tenant.passwordErrorLockTime = this.passwordErrorLockTimeComputed
+          this.confirmDisabled = true
           if (this.type === 'add') {
             this.save()
           } else {
@@ -258,6 +259,9 @@ export default {
             })
             this.$emit('success')
           }
+        }).finally(() => {
+          this.confirmDisabled = false
+          return true
         })
     },
     update () {
@@ -272,6 +276,9 @@ export default {
             })
             this.$emit('success')
           }
+        }).finally(() => {
+          this.confirmDisabled = false
+          return true
         })
     },
     reset () {
