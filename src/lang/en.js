@@ -236,7 +236,7 @@ export default {
   common: {
     system: 'Dev&Operate Microservice SaaS System',
     desc: {
-      a: 'Based on Spring Boot 2.1.2 & Spring Cloud Greenwich.RELEASE',
+      a: 'Based on SpringBoot 2.2.5 & SpringCloud Hoxton.SR1',
       b: 'Use Spring Cloud OAuth2 Unified Authentication',
       c: 'Enterprise design and configuration, deny demo project',
       d: 'Front-end separation architecture for increased efficiency',
