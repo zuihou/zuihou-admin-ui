@@ -345,9 +345,9 @@ export default {
       })
     },
     add () {
-      if (this.tableData.total > 20) {
+      if (this.tableData.total > 5) {
         this.$message({
-          message: '演示环境有限，最多支持创建20个租户，请在现有租户下创建用户进行测试',
+          message: '演示环境有限，最多支持创建5个租户，请在现有租户下创建用户进行测试',
           type: "warning",
           duration: 5000
         })
