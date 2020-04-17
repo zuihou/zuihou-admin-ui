@@ -5,6 +5,7 @@
         v-model="queryParams.model.tenantCode"
         clearable
         :placeholder="$t('table.globalUser.tenantCode')"
+        @change="codeChange"
         class="filter-item search-item"
       >
         <el-option key="1" label="超管" value="admin" />
@@ -315,6 +316,9 @@ export default {
         this.loading = false
         return true
       })
+    },
+    codeChange () {
+      this.fetch()
     },
     sortChange (val) {
       this.queryParams.sort = val.prop
