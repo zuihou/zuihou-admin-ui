@@ -89,7 +89,8 @@ export default {
     return {
       type: 'add',
       updateFileData: {
-        bizType: 'TENANT_LOGO'
+        bizType: 'TENANT_LOGO',
+        bizId: ''
       },
       passwordErrorLockTimeHidden: true,
       passwordErrorLockTime: 0,
@@ -228,6 +229,7 @@ export default {
     },
     setTenant (val) {
       this.tenant = { ...val }
+      this.updateFileData.bizId = this.tenant.id
     },
     close () {
       this.$emit('close')
@@ -302,7 +304,6 @@ export default {
         return
       }
       const fileResult = res.data
-      this.tenant.id = fileResult['bizId']
       this.tenant.logo = fileResult['url']
     },
     handleAvatarError (res, file) {
