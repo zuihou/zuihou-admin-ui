@@ -7,13 +7,13 @@
           <el-option v-for="item in tenantList" :key="item.code" :label="item.name" :value="item.code" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t(&quot;table.globalUser.account&quot;)" prop="account">
+      <el-form-item :label="$t('table.globalUser.account')" prop="account">
         <el-input v-model="globalUser.account" :disabled="type === &quot;edit&quot;" />
       </el-form-item>
-      <el-form-item :label="$t(&quot;table.globalUser.password&quot;)" prop="password">
+      <el-form-item v-show="type === 'add'" :label="$t('table.globalUser.password')" prop="password">
         <el-input v-model="globalUser.password" maxlength="64" type="password" />
       </el-form-item>
-      <el-form-item :label="$t(&quot;table.globalUser.confirmPassword&quot;)" prop="confirmPassword">
+      <el-form-item v-show="type === 'add'" :label="$t(&quot;table.globalUser.confirmPassword&quot;)" prop="confirmPassword">
         <el-input v-model="globalUser.confirmPassword" maxlength="64" type="password" />
       </el-form-item>
       <el-form-item :label="$t(&quot;table.globalUser.name&quot;)" prop="name">

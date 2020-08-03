@@ -40,7 +40,7 @@ function handleError (error, reject) {
     })
   } else if (error.response && error.response.data) {
     Message({
-      message: error.response.data
+      message: error.response.data.msg
     })
   } else if (error.message) {
     Message({

@@ -381,9 +381,9 @@ export default {
         return
       }
 
-      this.$confirm(this.$t("tips.confirmDelete"), this.$t("common.tips"), {
-        confirmButtonText: this.$t("common.confirm"),
-        cancelButtonText: this.$t("common.cancel"),
+      this.$confirm("删除租户数据后，会将租户库及其所有数据全部删除，建议调用禁用接口。", this.$t("common.tips"), {
+        confirmButtonText: "禁用",
+        cancelButtonText: "删除",
         type: "warning"
       })
         .then(() => {
@@ -402,11 +402,27 @@ export default {
               type: "warning"
             })
           } else {
-            this.delete(ids)
+            this.updateStatus(ids)
           }
         })
         .catch(() => {
-          this.clearSelections()
+          const ids = []
+          let contain = false
+          this.selection.forEach(item => {
+            if (item.readonly) {
+              contain = true
+              return
+            }
+            ids.push(item.id)
+          })
+          if (contain) {
+            this.$message({
+              message: this.$t("tips.systemData"),
+              type: "warning"
+            })
+          } else {
+            this.delete(ids)
+          }
         })
     },
     clearSelections () {
@@ -418,6 +434,18 @@ export default {
         if (res.isSuccess) {
           this.$message({
             message: this.$t("tips.deleteSuccess"),
+            type: "success"
+          })
+          this.search()
+        }
+      })
+    },
+    updateStatus (ids) {
+      tenantApi.updateStatus({ 'ids[]': ids }).then(response => {
+        const res = response.data
+        if (res.isSuccess) {
+          this.$message({
+            message: '禁用成功',
             type: "success"
           })
           this.search()

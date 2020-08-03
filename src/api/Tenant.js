@@ -17,6 +17,10 @@ const apiList = {
     method: 'POST',
     url: `/authority/tenant/init`
   },
+  updateStatus: {
+    method: 'POST',
+    url: `/authority/tenant/status`
+  },
   remove: {
     method: 'DELETE',
     url: `/authority/tenant`
@@ -62,6 +66,13 @@ export default {
   update (data) {
     return axiosApi({
       ...apiList.update,
+      data
+    })
+  },
+  updateStatus (data) {
+    return axiosApi({
+      ...apiList.updateStatus,
+      formData: true,
       data
     })
   },

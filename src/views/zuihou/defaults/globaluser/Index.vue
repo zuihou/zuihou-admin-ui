@@ -89,11 +89,23 @@
         <template slot-scope="{row}">
           <i class="el-icon-edit table-operation" style="color: #2db7f5;" @click="edit(row)" />
           <i class="el-icon-delete table-operation" style="color: #f50;" @click="singleDelete(row)" />
+          <i
+            @click="updatePassword(row)"
+            class="el-icon-refresh-left"
+            style="color: #f50;"
+          />
         </template>
       </el-table-column>
     </el-table>
     <pagination v-show="tableData.total>0" :limit.sync="queryParams.size" :page.sync="queryParams.current" :total="Number(tableData.total)" @pagination="fetch" />
     <global-user-edit ref="edit" :dialog-visible="dialog.isVisible" :title="dialog.title" @close="editClose" @success="editSuccess" />
+    <update-password
+      :dialog-visible="updatePasswordDialog.isVisible"
+      :type="updatePasswordDialog.type"
+      @close="updatePasswordClose"
+      @success="updatePasswordSuccess"
+      ref="updatePassword"
+    />
     <el-dialog
       v-el-drag-dialog
       :close-on-click-modal="false"
@@ -115,18 +127,23 @@ import Pagination from '@/components/Pagination'
 import GlobalUserEdit from './Edit'
 import globalUserApi from '@/api/GlobalUser.js'
 import tenantApi from '@/api/Tenant.js'
+import UpdatePassword from "./UpdatePassword"
 import elDragDialog from '@/directive/el-drag-dialog'
 import { downloadFile, initQueryParams } from '@/utils/commons'
 
 export default {
   name: 'GlobalUserManage',
   directives: { elDragDialog },
-  components: { Pagination, GlobalUserEdit },
+  components: { Pagination, GlobalUserEdit, UpdatePassword },
   data () {
     return {
       dialog: {
         isVisible: false,
         title: ''
+      },
+      updatePasswordDialog: {
+        isVisible: false,
+        type: "add"
       },
       preview: {
         isVisible: false,
@@ -169,6 +186,12 @@ export default {
     },
     editSuccess () {
       this.search()
+    },
+    updatePasswordSuccess () {
+      this.search()
+    },
+    updatePasswordClose () {
+      this.updatePasswordDialog.isVisible = false
     },
     onSelectChange (selection) {
       this.selection = selection
@@ -292,10 +315,17 @@ export default {
         })
         return
       }
+      row.tenantCode = this.queryParams.model.tenantCode
       this.$refs.edit.setGlobalUser(row)
       this.$refs.edit.type = 'edit'
       this.dialog.title = this.$t('common.edit')
       this.dialog.isVisible = true
+    },
+    updatePassword (row) {
+      row.tenantCode = this.queryParams.model.tenantCode
+      this.$refs.updatePassword.setUser(row)
+      this.updatePasswordDialog.type = "edit"
+      this.updatePasswordDialog.isVisible = true
     },
     fetch (params = {}) {
       this.loading = true

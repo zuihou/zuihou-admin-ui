@@ -32,6 +32,10 @@ const apiList = {
   import: {
     method: 'POST',
     url: `/authority/globalUser/import`
+  },
+  updatePassword: {
+    method: 'PUT',
+    url: `/authority/globalUser/password`
   }
 }
 
@@ -77,6 +81,12 @@ export default {
     return axiosApi({
       ...apiList.export,
       responseType: "blob",
+      data
+    })
+  },
+  updatePassword (data) {
+    return axiosApi({
+      ...apiList.updatePassword,
       data
     })
   },
