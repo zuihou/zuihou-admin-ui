@@ -9,36 +9,30 @@
     top="50px"
   >
     <el-form
+      ref="form"
       :model="user"
       :rules="rules"
       label-position="right"
       label-width="100px"
-      ref="form"
     >
-      <el-form-item
-        :label="$t('table.user.oldPassword')"
-        prop="oldPassword"
-      >
-          <el-input type="password" v-model="user.oldPassword" />
-      </el-form-item>
       <el-form-item
         :label="$t('table.user.password')"
         prop="password"
       >
-          <el-input type="password" v-model="user.password" />
+        <el-input v-model="user.password" type="password" />
       </el-form-item>
       <el-form-item
         :label="$t('table.user.confirmPassword')"
         prop="confirmPassword"
       >
-          <el-input type="password" v-model="user.confirmPassword" />
+        <el-input v-model="user.confirmPassword" type="password" />
       </el-form-item>
     </el-form>
-    <div class="dialog-footer" slot="footer">
-      <el-button @click="isVisible = false" plain type="warning">{{
+    <div slot="footer" class="dialog-footer">
+      <el-button plain type="warning" @click="isVisible = false">{{
         $t("common.cancel")
       }}</el-button>
-      <el-button @click="submitForm" plain type="primary">{{
+      <el-button plain type="primary" @click="submitForm">{{
         $t("common.confirm")
       }}</el-button>
     </div>
@@ -65,11 +59,6 @@ export default {
       screenWidth: 0,
       width: this.initWidth(),
       rules: {
-        oldPassword: {
-          required: true,
-          message: this.$t("rules.require"),
-          trigger: "blur"
-        },
         password: {
           required: true,
           message: this.$t("rules.require"),
@@ -79,7 +68,7 @@ export default {
           required: true,
           message: this.$t("rules.require"),
           trigger: "blur"
-        },
+        }
       }
     }
   },
@@ -108,7 +97,6 @@ export default {
     initUser () {
       return {
         id: "",
-        oldPassword: "",
         confirmPassword: "",
         password: "",
         tenantCode: ""
@@ -126,7 +114,7 @@ export default {
     },
     setUser (val) {
       const vm = this
-      vm.user = { id: val.id }
+      vm.user = { id: val.id, tenantCode: val.tenantCode }
     },
     close () {
       this.$emit("close")
@@ -148,7 +136,7 @@ export default {
       })
     },
     editSubmit () {
-      userApi.updatePassword(this.user).then(response => {
+      userApi.reset(this.user).then(response => {
         const res = response.data
         if (res.isSuccess) {
           this.isVisible = false

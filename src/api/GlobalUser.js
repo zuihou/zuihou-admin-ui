@@ -33,9 +33,9 @@ const apiList = {
     method: 'POST',
     url: `/authority/globalUser/import`
   },
-  updatePassword: {
+  reset: {
     method: 'PUT',
-    url: `/authority/globalUser/password`
+    url: `/authority/globalUser/reset`
   }
 }
 
@@ -84,9 +84,9 @@ export default {
       data
     })
   },
-  updatePassword (data) {
+  reset (data) {
     return axiosApi({
-      ...apiList.updatePassword,
+      ...apiList.reset,
       data
     })
   },
