@@ -114,7 +114,7 @@
         width="90px"
       >
         <template slot-scope="{ row }">
-          <el-tag :type="row.status ? row.status.code :row.status | statusFilter">{{
+          <el-tag :type="row.status ? row.status.code :row.status | statusFilter" class="pointer" @click="changeStatus(row)">{{
             row.status.desc
           }}</el-tag>
         </template>
@@ -384,7 +384,10 @@ export default {
       this.$confirm("删除租户数据后，会将租户库及其所有数据全部删除，建议调用禁用接口。", this.$t("common.tips"), {
         confirmButtonText: "禁用",
         cancelButtonText: "删除",
-        type: "warning"
+        type: "warning",
+        closeOnClickModal: false,
+        closeOnPressEscape: false,
+        distinguishCancelAndClose: true
       })
         .then(() => {
           const ids = []
@@ -405,23 +408,25 @@ export default {
             this.updateStatus(ids)
           }
         })
-        .catch(() => {
-          const ids = []
-          let contain = false
-          this.selection.forEach(item => {
-            if (item.readonly) {
-              contain = true
-              return
-            }
-            ids.push(item.id)
-          })
-          if (contain) {
-            this.$message({
-              message: this.$t("tips.systemData"),
-              type: "warning"
+        .catch((action) => {
+          if (action === 'cancel') {
+            const ids = []
+            let contain = false
+            this.selection.forEach(item => {
+              if (item.readonly) {
+                contain = true
+                return
+              }
+              ids.push(item.id)
             })
-          } else {
-            this.delete(ids)
+            if (contain) {
+              this.$message({
+                message: this.$t("tips.systemData"),
+                type: "warning"
+              })
+            } else {
+              this.delete(ids)
+            }
           }
         })
     },
@@ -447,6 +452,25 @@ export default {
           this.$message({
             message: '禁用成功',
             type: "success"
+          })
+          this.search()
+        }
+      })
+    },
+    changeStatus (row) {
+      debugger
+      let status = 'NORMAL'
+      if (row.status['code'] === 'NORMAL') {
+        status = 'FORBIDDEN'
+      } else {
+        status = 'NORMAL'
+      }
+      tenantApi.updateStatus({ 'ids[]': row.id, status: status }).then(response => {
+        const res = response.data
+        if (res.isSuccess) {
+          this.$message({
+            message: row.status['code'] === 'NORMAL' ? '禁用成功' : '启用成功',
+            type: row.status['code'] === 'NORMAL' ? 'warning' : 'success'
           })
           this.search()
         }
@@ -507,7 +531,7 @@ export default {
       this.search()
     },
     cellClick (row, column) {
-      if (column['columnKey'] === "operation") {
+      if (column['columnKey'] === "operation" || column['columnKey'] === "status") {
         return
       }
       let flag = false
