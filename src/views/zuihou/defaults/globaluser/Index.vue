@@ -5,8 +5,8 @@
         v-model="queryParams.model.tenantCode"
         clearable
         :placeholder="$t('table.globalUser.tenantCode')"
-        @change="codeChange"
         class="filter-item search-item"
+        @change="codeChange"
       >
         <el-option key="1" label="超管" value="admin" />
         <el-option v-for="(item, key, index) in tenantList" :key="index" :label="item.name" :value="item.code" />
@@ -90,9 +90,9 @@
           <i class="el-icon-edit table-operation" style="color: #2db7f5;" @click="edit(row)" />
           <i class="el-icon-delete table-operation" style="color: #f50;" @click="singleDelete(row)" />
           <i
-            @click="updatePassword(row)"
             class="el-icon-refresh-left"
             style="color: #f50;"
+            @click="updatePassword(row)"
           />
         </template>
       </el-table-column>
@@ -100,11 +100,11 @@
     <pagination v-show="tableData.total>0" :limit.sync="queryParams.size" :page.sync="queryParams.current" :total="Number(tableData.total)" @pagination="fetch" />
     <global-user-edit ref="edit" :dialog-visible="dialog.isVisible" :title="dialog.title" @close="editClose" @success="editSuccess" />
     <update-password
+      ref="updatePassword"
       :dialog-visible="updatePasswordDialog.isVisible"
       :type="updatePasswordDialog.type"
       @close="updatePasswordClose"
       @success="updatePasswordSuccess"
-      ref="updatePassword"
     />
     <el-dialog
       v-el-drag-dialog
@@ -174,7 +174,7 @@ export default {
   },
   methods: {
     loadTenantList () {
-      tenantApi.list().then(response => {
+      tenantApi.list({ status: 'NORMAL' }).then(response => {
         const res = response.data
         if (res.isSuccess) {
           this.tenantList = res.data
