@@ -112,6 +112,15 @@ export default {
       system: 'System',
       browser: 'Browser'
     },
+    datasourceConfig: {
+      id: 'ID',
+      name: 'name',
+      poolName: 'poolName',
+      username: 'username',
+      password: 'password',
+      url: 'url',
+      driverClassName: 'driverClassName'
+    },
     gen: {
       config: {
         author: 'Author',

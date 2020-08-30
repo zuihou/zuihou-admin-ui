@@ -112,6 +112,15 @@ export default {
       system: '登录系统',
       browser: '浏览器'
     },
+    datasourceConfig: {
+      id: 'ID',
+      name: '名称',
+      poolName: '数据源名',
+      username: '账号',
+      password: '密码',
+      url: '链接',
+      driverClassName: '驱动'
+    },
     gen: {
       config: {
         author: '作者名称',

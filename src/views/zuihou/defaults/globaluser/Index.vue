@@ -54,7 +54,7 @@
       @sort-change="sortChange"
       @cell-click="cellClick"
     >
-      <el-table-column align="center" type="selection" width="40px" :reserve-selection="true" />
+      <el-table-column align="center" type="selection" width="40px" column-key="selectionId" :reserve-selection="true" />
       <el-table-column :label="$t('table.globalUser.account')" :show-overflow-tooltip="true" class-name="status-col" prop="account">
         <template slot-scope="scope">
           <span>{{ scope.row.account }}</span>
@@ -370,7 +370,7 @@ export default {
       this.search()
     },
     cellClick (row, column) {
-      if (column['columnKey'] === "operation") {
+      if (column['columnKey'] !== "selectionId") {
         return
       }
       let flag = false

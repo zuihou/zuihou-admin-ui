@@ -2,13 +2,13 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input
-        v-model="queryParams.model.code"
-        :placeholder="$t('table.tenant.code')"
+        v-model="queryParams.model.name"
+        :placeholder="$t('table.datasourceConfig.name')"
         class="filter-item search-item"
       />
       <el-input
-        v-model="queryParams.model.name"
-        :placeholder="$t('table.tenant.name')"
+        v-model="queryParams.model.username"
+        :placeholder="$t('table.datasourceConfig.username')"
         class="filter-item search-item"
       />
       <el-date-picker
@@ -58,90 +58,51 @@
     >
       <el-table-column align="center" type="selection" width="40px" column-key="selectionId" :reserve-selection="true" />
       <el-table-column
-        :label="$t('table.tenant.code')"
-        :show-overflow-tooltip="true"
+        :label="$t('table.datasourceConfig.name')"
         align="center"
         prop="code"
-        width="100px"
-      >
-        <template slot-scope="scope">
-          <span>{{ scope.row.code }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.tenant.name')"
-        :show-overflow-tooltip="true"
-        class-name="status-col"
-        prop="name"
+        width="150px"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('table.tenant.duty')"
+        :label="$t('table.datasourceConfig.username')"
         class-name="status-col"
-        width="80px"
+        prop="name"
+        width="100px"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.duty }}</span>
+          <span>{{ scope.row.username }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        :filter-multiple="false"
-        :filters="typeFilterList"
-        column-key="type.code"
-        :label="$t('table.tenant.type')"
+        :label="$t('table.datasourceConfig.password')"
+        class-name="status-col"
+        width="100px"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.password }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        :label="$t('table.datasourceConfig.url')"
+        class-name="status-col"
         :show-overflow-tooltip="true"
-        align="center"
-        prop="type"
-        width="80px"
       >
-        <template slot-scope="{ row }">
-          <el-tag :type="row.type ? row.type.code :'' | typeFilter">{{
-            row.type.desc
-          }}</el-tag>
+        <template slot-scope="scope">
+          <span>{{ scope.row.url }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        :filter-multiple="false"
-        column-key="status"
-        :filters="statusFilterList"
-        :label="$t('table.tenant.status')"
+        :label="$t('table.datasourceConfig.driverClassName')"
+        class-name="status-col"
         :show-overflow-tooltip="true"
-        align="center"
-        prop="status"
-        width="90px"
-      >
-        <template slot-scope="{ row }">
-          <el-tag :type="row.status ? row.status.code :row.status | statusFilter" class="pointer" @click="changeStatus(row)">{{
-            row.status.desc
-          }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.tenant.expirationTime')"
-        align="center"
-        prop="expirationTime"
-        width="170px"
+        width="200px"
       >
         <template slot-scope="scope">
-          <span>{{
-            scope.row.expirationTime ? scope.row.expirationTime : "永久"
-          }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.systemData')"
-        align="center"
-        prop="readonly"
-        sortable
-        width="120px"
-      >
-        <template slot-scope="scope">
-          <span>{{
-            scope.row.readonly ? $t("common.yes") : $t("common.no")
-          }}</span>
+          <span>{{ scope.row.driverClassName }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -164,9 +125,14 @@
       >
         <template slot-scope="{ row }">
           <i
-            class="el-icon-view table-operation"
+            class="el-icon-copy-document table-operation"
             style="color: #87d068;"
-            @click="view(row)"
+            @click="copy(row)"
+          />
+          <i
+            class="el-icon-connection table-operation"
+            style="color: #87d068;"
+            @click="testConnect(row)"
           />
           <i
             class="el-icon-edit table-operation"
@@ -188,17 +154,12 @@
       :total="Number(tableData.total)"
       @pagination="fetch"
     />
-    <tenant-edit
+    <datasourceConfig-edit
       ref="edit"
       :dialog-visible="dialog.isVisible"
       :title="dialog.title"
       @close="editClose"
       @success="editSuccess"
-    />
-    <tenant-view
-      ref="view"
-      :dialog-visible="tenantViewVisible"
-      @close="viewClose"
     />
     <el-dialog
       v-el-drag-dialog
@@ -218,32 +179,15 @@
 
 <script>
 import Pagination from "@/components/Pagination"
-import TenantEdit from "./Edit"
-import TenantView from "./View"
-import tenantApi from "@/api/Tenant.js"
+import DatasourceConfigEdit from "./Edit"
+import datasourceConfigApi from "@/api/DatasourceConfig.js"
 import elDragDialog from '@/directive/el-drag-dialog'
-import { downloadFile, initEnums, initQueryParams } from '@/utils/commons'
+import { downloadFile, initQueryParams } from '@/utils/commons'
 export default {
-  name: "TenantManage",
+  name: "DatasourceConfigManage",
   directives: { elDragDialog },
-  components: { Pagination, TenantEdit, TenantView },
+  components: { Pagination, DatasourceConfigEdit },
   filters: {
-    typeFilter (status) {
-      const map = {
-        CREATE: "success",
-        REGISTER: "danger"
-      }
-      return map[status] || "info"
-    },
-    statusFilter (status) {
-      const map = {
-        NORMAL: "success",
-        FORBIDDEN: "warning",
-        WAITING: "info",
-        REFUSE: "danger"
-      }
-      return map[status] || ""
-    }
   },
   data () {
     return {
@@ -251,11 +195,11 @@ export default {
         isVisible: false,
         title: ""
       },
+      isTestConnect: false,
       preview: {
         isVisible: false,
         context: ''
       },
-      tenantViewVisible: false,
       tableKey: 0,
       queryParams: initQueryParams({}),
       selection: [],
@@ -264,44 +208,15 @@ export default {
         total: 0
       },
       enums: {
-        TenantTypeEnum: {},
-        TenantStatusEnum: {}
       }
     }
   },
   computed: {
-    currentUser () {
-      return this.$store.state.account.user
-    },
-    typeFilterList () {
-      const list = []
-      for (const key in this.enums.TenantTypeEnum) {
-        list.push({
-          value: key,
-          text: this.enums.TenantTypeEnum[key]
-        })
-      }
-      return list
-    },
-    statusFilterList () {
-      const list = []
-      for (const key in this.enums.TenantStatusEnum) {
-        list.push({
-          value: key,
-          text: this.enums.TenantStatusEnum[key]
-        })
-      }
-      return list
-    }
   },
   mounted () {
-    initEnums(['TenantStatusEnum', 'TenantTypeEnum'], this.enums)
     this.fetch()
   },
   methods: {
-    viewClose () {
-      this.tenantViewVisible = false
-    },
     editClose () {
       this.dialog.isVisible = false
     },
@@ -327,8 +242,8 @@ export default {
         this.queryParams.map.createTime_st = this.queryParams.timeRange[0]
         this.queryParams.map.createTime_ed = this.queryParams.timeRange[1]
       }
-      this.queryParams.map.fileName = '导出用户数据'
-      tenantApi.preview(this.queryParams).then(response => {
+      this.queryParams.map.fileName = '导出数据源数据'
+      datasourceConfigApi.preview(this.queryParams).then(response => {
         const res = response.data
         this.preview.isVisible = true
         this.preview.context = res.data
@@ -339,20 +254,12 @@ export default {
         this.queryParams.map.createTime_st = this.queryParams.timeRange[0]
         this.queryParams.map.createTime_ed = this.queryParams.timeRange[1]
       }
-      this.queryParams.map.fileName = '导出用户数据'
-      tenantApi.export(this.queryParams).then(response => {
+      this.queryParams.map.fileName = '导出数据源数据'
+      datasourceConfigApi.export(this.queryParams).then(response => {
         downloadFile(response)
       })
     },
     add () {
-      if (this.tableData.total > 5) {
-        this.$message({
-          message: '演示环境有限，最多支持创建5个租户，请在现有租户下创建用户进行测试',
-          type: "warning",
-          duration: 5000
-        })
-        return
-      }
       this.$refs.edit.type = "add"
       this.dialog.title = this.$t("common.add")
       this.dialog.isVisible = true
@@ -405,28 +312,7 @@ export default {
               type: "warning"
             })
           } else {
-            this.updateStatus(ids)
-          }
-        })
-        .catch((action) => {
-          if (action === 'cancel') {
-            const ids = []
-            let contain = false
-            this.selection.forEach(item => {
-              if (item.readonly) {
-                contain = true
-                return
-              }
-              ids.push(item.id)
-            })
-            if (contain) {
-              this.$message({
-                message: this.$t("tips.systemData"),
-                type: "warning"
-              })
-            } else {
-              this.delete(ids)
-            }
+            this.delete(ids)
           }
         })
     },
@@ -434,7 +320,7 @@ export default {
       this.$refs.table.clearSelection()
     },
     delete (ids) {
-      tenantApi.remove({ ids: ids }).then(response => {
+      datasourceConfigApi.remove({ ids: ids }).then(response => {
         const res = response.data
         if (res.isSuccess) {
           this.$message({
@@ -445,50 +331,46 @@ export default {
         }
       })
     },
-    updateStatus (ids) {
-      tenantApi.updateStatus({ 'ids[]': ids }).then(response => {
-        const res = response.data
-        if (res.isSuccess) {
-          this.$message({
-            message: '禁用成功',
-            type: "success"
-          })
-          this.search()
-        }
-      })
-    },
-    changeStatus (row) {
-      debugger
-      let status = 'NORMAL'
-      if (row.status['code'] === 'NORMAL') {
-        status = 'FORBIDDEN'
-      } else {
-        status = 'NORMAL'
-      }
-      tenantApi.updateStatus({ 'ids[]': row.id, status: status }).then(response => {
-        const res = response.data
-        if (res.isSuccess) {
-          this.$message({
-            message: row.status['code'] === 'NORMAL' ? '禁用成功' : '启用成功',
-            type: row.status['code'] === 'NORMAL' ? 'warning' : 'success'
-          })
-          this.search()
-        }
-      })
-    },
-    view (row) {
-      this.$refs.view.setTenant(row)
-      this.tenantViewVisible = true
-    },
-    edit (row) {
-      if (row.readonly) {
+    testConnect (row) {
+      row.poolName = 'test'
+      if (this.isTestConnect) {
         this.$message({
-          message: this.$t("tips.systemData"),
-          type: "warning"
+          message: '正在测试连接，请稍后',
+          type: 'warn'
         })
         return
       }
-      this.$refs.edit.setTenant(row)
+
+      this.isTestConnect = true
+      datasourceConfigApi.testConnect(row).then((response) => {
+        debugger
+        const res = response.data
+        if (res.isSuccess && res.data) {
+          this.$message({
+            message: '连接成功',
+            type: 'success'
+          })
+        } else {
+          this.$message({
+            message: '连接失败',
+            type: 'error'
+          })
+        }
+      }).catch((error) => {
+        console.log(error)
+        debugger
+      }).finally(() => {
+        this.isTestConnect = false
+      })
+    },
+    copy (row) {
+      this.$refs.edit.setDatasourceConfig(row)
+      this.$refs.edit.type = "copy"
+      this.dialog.title = this.$t("common.copy")
+      this.dialog.isVisible = true
+    },
+    edit (row) {
+      this.$refs.edit.setDatasourceConfig(row)
       this.$refs.edit.type = "edit"
       this.dialog.title = this.$t("common.edit")
       this.dialog.isVisible = true
@@ -503,7 +385,7 @@ export default {
       this.queryParams.current = params.current ? params.current : this.queryParams.current
       this.queryParams.size = params.size ? params.size : this.queryParams.size
 
-      tenantApi.page(this.queryParams).then(response => {
+      datasourceConfigApi.page(this.queryParams).then(response => {
         const res = response.data
         if (res.isSuccess) {
           this.tableData = res.data
