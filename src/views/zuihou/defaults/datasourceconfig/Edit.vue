@@ -2,7 +2,7 @@
   <el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :title="title" :visible.sync="isVisible" :width="width" top="50px">
     <el-form ref="form" :model="datasourceConfig" :rules="rules" label-position="right" label-width="130px">
       <el-form-item :label="$t('table.datasourceConfig.name')" prop="name">
-        <el-input v-model="datasourceConfig.name" placeholder="名称" :disabled="type === 'edit'" />
+        <el-input v-model="datasourceConfig.name" placeholder="名称" />
       </el-form-item>
       <el-form-item :label="$t('table.datasourceConfig.username')" placeholder="名称" prop="username">
         <el-input v-model="datasourceConfig.username" />

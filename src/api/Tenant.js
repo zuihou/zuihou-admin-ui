@@ -40,6 +40,10 @@ const apiList = {
   import: {
     method: 'POST',
     url: `/tenant/tenant/import`
+  },
+  initConnect: {
+    method: 'POST',
+    url: `/tenant/tenant/initConnect`
   }
 }
 
@@ -110,6 +114,12 @@ export default {
   import (data) {
     return axiosApi({
       ...apiList.import,
+      data
+    })
+  },
+  initConnect (data) {
+    return axiosApi({
+      ...apiList.initConnect,
       data
     })
   }

@@ -108,13 +108,12 @@
         column-key="status"
         :filters="statusFilterList"
         :label="$t('table.tenant.status')"
-        :show-overflow-tooltip="true"
         align="center"
         prop="status"
-        width="90px"
+        width="100px"
       >
         <template slot-scope="{ row }">
-          <el-tag :type="row.status ? row.status.code :row.status | statusFilter" class="pointer" @click="changeStatus(row)">{{
+          <el-tag :type="row.status ? row.status.code :row.status | statusFilter" class="pointer">{{
             row.status.desc
           }}</el-tag>
         </template>
@@ -178,6 +177,11 @@
             style="color: #f50;"
             @click="singleDelete(row)"
           />
+          <i
+            class="el-icon-connection table-operation"
+            style="color: #f50;"
+            @click="initConnection(row)"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -200,6 +204,11 @@
       :dialog-visible="tenantViewVisible"
       @close="viewClose"
     />
+    <tenant-connection
+      ref="connection"
+      :dialog-visible="tenantConnectionVisible"
+      @close="tenantConnectionClose"
+    />
     <el-dialog
       v-el-drag-dialog
       :close-on-click-modal="false"
@@ -220,13 +229,14 @@
 import Pagination from "@/components/Pagination"
 import TenantEdit from "./Edit"
 import TenantView from "./View"
+import TenantConnection from "./Connection"
 import tenantApi from "@/api/Tenant.js"
 import elDragDialog from '@/directive/el-drag-dialog'
 import { downloadFile, initEnums, initQueryParams } from '@/utils/commons'
 export default {
   name: "TenantManage",
   directives: { elDragDialog },
-  components: { Pagination, TenantEdit, TenantView },
+  components: { TenantConnection, Pagination, TenantEdit, TenantView },
   filters: {
     typeFilter (status) {
       const map = {
@@ -256,6 +266,7 @@ export default {
         context: ''
       },
       tenantViewVisible: false,
+      tenantConnectionVisible: false,
       tableKey: 0,
       queryParams: initQueryParams({}),
       selection: [],
@@ -299,6 +310,9 @@ export default {
     this.fetch()
   },
   methods: {
+    tenantConnectionClose () {
+      this.tenantConnectionVisible = false
+    },
     viewClose () {
       this.tenantViewVisible = false
     },
@@ -545,6 +559,10 @@ export default {
       if (!flag) {
         this.$refs.table.toggleRowSelection(row, true)
       }
+    },
+    initConnection (row) {
+      this.$refs.connection.setTenant(row)
+      this.tenantConnectionVisible = true
     }
   }
 }
