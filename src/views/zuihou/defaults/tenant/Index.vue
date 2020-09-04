@@ -178,6 +178,7 @@
             @click="singleDelete(row)"
           />
           <i
+            v-if="row.status.code === 'WAIT_INIT'"
             class="el-icon-connection table-operation"
             style="color: #f50;"
             @click="initConnection(row)"
@@ -208,6 +209,7 @@
       ref="connection"
       :dialog-visible="tenantConnectionVisible"
       @close="tenantConnectionClose"
+      @success="editSuccess"
     />
     <el-dialog
       v-el-drag-dialog

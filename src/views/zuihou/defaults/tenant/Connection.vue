@@ -13,75 +13,85 @@
         </el-tooltip>
       </el-form-item>
       <el-form-item label="认证服务数据源" prop="oauthDatasource">
-        <el-select
-          v-model="tenant.oauthDatasource"
-          placeholder="认证服务数据源"
-          style="width:100%"
-          filterable
-          :disabled="tenant.connectType==='LOCAL'"
-        >
-          <el-option v-for="(item, key, index) in datasourceConfigList" :key="index" :label="item.name" :value="item.id">
-            <span style="float: left">{{ item.name }}({{ item.driverClassName }})</span>
-            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.username }}</span>
-          </el-option>
-        </el-select>
+        <el-tooltip class="item" content="建议认证、权限、文件、消息服务共用一个数据源，网关单独一个数据源" effect="dark" placement="right-start">
+          <el-select
+            v-model="tenant.oauthDatasource"
+            placeholder="认证服务数据源"
+            style="width:100%"
+            filterable
+            :disabled="tenant.connectType==='LOCAL'"
+          >
+            <el-option v-for="(item, key, index) in datasourceConfigList" :key="index" :label="item.name" :value="item.id" :title="item.url">
+              <span style="float: left">{{ item.name }}({{ item.driverClassName }})</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.username }}</span>
+            </el-option>
+          </el-select>
+        </el-tooltip>
       </el-form-item>
       <el-form-item label="权限服务数据源" prop="authorityDatasource">
-        <el-select
-          ref="authorityDatasource"
-          v-model="tenant.authorityDatasource"
-          placeholder="权限服务数据源"
-          style="width:100%"
-          filterable
-          :disabled="tenant.connectType==='LOCAL'"
-        >
-          <el-option v-for="(item, key, index) in datasourceConfigList" :key="index" :label="item.name" :value="item.id">
-            <span style="float: left">{{ item.name }}({{ item.driverClassName }})</span>
-            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.username }}</span>
-          </el-option>
-        </el-select>
+        <el-tooltip class="item" content="建议认证、权限、文件、消息服务共用一个数据源，网关单独一个数据源" effect="dark" placement="right-start">
+          <el-select
+            ref="authorityDatasource"
+            v-model="tenant.authorityDatasource"
+            placeholder="权限服务数据源"
+            style="width:100%"
+            filterable
+            :disabled="tenant.connectType==='LOCAL'"
+          >
+            <el-option v-for="(item, key, index) in datasourceConfigList" :key="index" :label="item.name" :value="item.id">
+              <span style="float: left">{{ item.name }}({{ item.driverClassName }})</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.username }}</span>
+            </el-option>
+          </el-select>
+        </el-tooltip>
       </el-form-item>
       <el-form-item label="文件服务数据源" prop="fileDatasource">
-        <el-select
-          v-model="tenant.fileDatasource"
-          placeholder="文件服务数据源"
-          style="width:100%"
-          filterable
-          :disabled="tenant.connectType==='LOCAL'"
-        >
-          <el-option v-for="(item, key, index) in datasourceConfigList" :key="index" :label="item.name" :value="item.id">
-            <span style="float: left">{{ item.name }}({{ item.driverClassName }})</span>
-            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.username }}</span>
-          </el-option>
-        </el-select>
+        <el-tooltip class="item" content="建议认证、权限、文件、消息服务共用一个数据源，网关单独一个数据源" effect="dark" placement="right-start">
+          <el-select
+            v-model="tenant.fileDatasource"
+            placeholder="文件服务数据源"
+            style="width:100%"
+            filterable
+            :disabled="tenant.connectType==='LOCAL'"
+          >
+            <el-option v-for="(item, key, index) in datasourceConfigList" :key="index" :label="item.name" :value="item.id">
+              <span style="float: left">{{ item.name }}({{ item.driverClassName }})</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.username }}</span>
+            </el-option>
+          </el-select>
+        </el-tooltip>
       </el-form-item>
       <el-form-item label="消息服务数据源" prop="msgsDatasource">
-        <el-select
-          v-model="tenant.msgsDatasource"
-          placeholder="消息服务数据源"
-          style="width:100%"
-          filterable
-          :disabled="tenant.connectType==='LOCAL'"
-        >
-          <el-option v-for="(item, key, index) in datasourceConfigList" :key="index" :label="item.name" :value="item.id">
-            <span style="float: left">{{ item.name }}({{ item.driverClassName }})</span>
-            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.username }}</span>
-          </el-option>
-        </el-select>
+        <el-tooltip class="item" content="建议认证、权限、文件、消息服务共用一个数据源，网关单独一个数据源" effect="dark" placement="right-start">
+          <el-select
+            v-model="tenant.msgsDatasource"
+            placeholder="消息服务数据源"
+            style="width:100%"
+            filterable
+            :disabled="tenant.connectType==='LOCAL'"
+          >
+            <el-option v-for="(item, key, index) in datasourceConfigList" :key="index" :label="item.name" :value="item.id">
+              <span style="float: left">{{ item.name }}({{ item.driverClassName }})</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.username }}</span>
+            </el-option>
+          </el-select>
+        </el-tooltip>
       </el-form-item>
       <el-form-item label="网关服务数据源" prop="gateDatasource">
-        <el-select
-          v-model="tenant.gateDatasource"
-          placeholder="网关服务数据源"
-          style="width:100%"
-          filterable
-          :disabled="tenant.connectType==='LOCAL'"
-        >
-          <el-option v-for="(item, key, index) in datasourceConfigList" :key="index" :label="item.name" :value="item.id">
-            <span style="float: left">{{ item.name }}({{ item.driverClassName }})</span>
-            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.username }}</span>
-          </el-option>
-        </el-select>
+        <el-tooltip class="item" content="建议认证、权限、文件、消息服务共用一个数据源，网关单独一个数据源" effect="dark" placement="right-start">
+          <el-select
+            v-model="tenant.gateDatasource"
+            placeholder="网关服务数据源"
+            style="width:100%"
+            filterable
+            :disabled="tenant.connectType==='LOCAL'"
+          >
+            <el-option v-for="(item, key, index) in datasourceConfigList" :key="index" :label="item.name" :value="item.id">
+              <span style="float: left">{{ item.name }}({{ item.driverClassName }})</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.username }}</span>
+            </el-option>
+          </el-select>
+        </el-tooltip>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
