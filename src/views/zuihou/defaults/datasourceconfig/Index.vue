@@ -288,9 +288,9 @@ export default {
         return
       }
 
-      this.$confirm("删除租户数据后，会将租户库及其所有数据全部删除，建议调用禁用接口。", this.$t("common.tips"), {
-        confirmButtonText: "禁用",
-        cancelButtonText: "删除",
+      this.$confirm("删除数据源数据后，会导致运行中的租户无法正常运行，请谨慎删除", this.$t("common.tips"), {
+        confirmButtonText: "坚决删除",
+        cancelButtonText: "取消",
         type: "warning",
         closeOnClickModal: false,
         closeOnPressEscape: false,
@@ -320,7 +320,7 @@ export default {
       this.$refs.table.clearSelection()
     },
     delete (ids) {
-      datasourceConfigApi.remove({ ids: ids }).then(response => {
+      datasourceConfigApi.delete({ ids: ids }).then(response => {
         const res = response.data
         if (res.isSuccess) {
           this.$message({

@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <aside> 新增租户(待初始化） -> 初始化连接 (正常) -> 使用内置超级管理员(账号：admin 密码：admin)登录 zuihou-ui</aside>
     <div class="filter-container">
       <el-input
         v-model="queryParams.model.code"
@@ -181,6 +182,7 @@
             v-if="row.status.code === 'WAIT_INIT'"
             class="el-icon-connection table-operation"
             style="color: #f50;"
+            title="初始化连接"
             @click="initConnection(row)"
           />
         </template>

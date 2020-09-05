@@ -1,16 +1,18 @@
 <template>
   <div class="app-container">
+    <aside> 2.5.1 版本，将租户服务和权限服务分离后，为了让租户服务职责简单，租户服务启动和运行时没有动态初始化租户库的数据源了，所以不能查看其他租户的用户数据了。
+      可以使用初始化租户时，内置的超级管理员账号登录zuihou-ui系统查看</aside>
     <div class="filter-container">
-      <el-select
-        v-model="queryParams.model.tenantCode"
-        clearable
-        :placeholder="$t('table.globalUser.tenantCode')"
-        class="filter-item search-item"
-        @change="codeChange"
-      >
-        <el-option key="1" label="超管" value="admin" />
-        <el-option v-for="(item, key, index) in tenantList" :key="index" :label="item.name" :value="item.code" />
-      </el-select>
+      <!--      <el-select-->
+      <!--        v-model="queryParams.model.tenantCode"-->
+      <!--        clearable-->
+      <!--        :placeholder="$t('table.globalUser.tenantCode')"-->
+      <!--        class="filter-item search-item"-->
+      <!--        @change="codeChange"-->
+      <!--      >-->
+      <!--        <el-option key="1" label="超管" value="admin" />-->
+      <!--        <el-option v-for="(item, key, index) in tenantList" :key="index" :label="item.name" :value="item.code" />-->
+      <!--      </el-select>-->
       <el-input v-model="queryParams.model.account" :placeholder="$t('table.globalUser.account')" class="filter-item search-item" />
       <el-input v-model="queryParams.model.name" :placeholder="$t('table.globalUser.name')" class="filter-item search-item" />
       <el-date-picker
