@@ -1,6 +1,12 @@
 <template>
-  <div id="tags-view-container" class="tags-view-container">
-    <scroll-pane ref="scrollPane" class="tags-view-wrapper">
+  <div
+    id="tags-view-container"
+    class="tags-view-container"
+  >
+    <scroll-pane
+      ref="scrollPane"
+      class="tags-view-wrapper"
+    >
       <router-link
         v-for="tag in visitedViews"
         ref="tag"
@@ -25,13 +31,22 @@
       :style="{left:left+&quot;px&quot;,top:top+&quot;px&quot;}"
       class="contextmenu"
     >
-      <li @click="refreshSelectedTag(selectedTag)">{{ $t('tagsView.refresh') }}</li>
-      <li v-if="!(selectedTag.meta&&selectedTag.meta.affix)" @click="closeSelectedTag(selectedTag)">
+      <li @click="refreshSelectedTag(selectedTag)">
+        {{ $t('tagsView.refresh') }}
+      </li>
+      <li
+        v-if="!(selectedTag.meta&&selectedTag.meta.affix)"
+        @click="closeSelectedTag(selectedTag)"
+      >
         {{
           $t('tagsView.close') }}
       </li>
-      <li @click="closeOthersTags">{{ $t('tagsView.closeOthers') }}</li>
-      <li @click="closeAllTags(selectedTag)">{{ $t('tagsView.closeAll') }}</li>
+      <li @click="closeOthersTags">
+        {{ $t('tagsView.closeOthers') }}
+      </li>
+      <li @click="closeAllTags(selectedTag)">
+        {{ $t('tagsView.closeAll') }}
+      </li>
     </ul>
   </div>
 </template>
@@ -120,7 +135,8 @@ export default {
       return false
     },
     moveToCurrentTag () {
-      const tags = this.$refs.tag
+      let vm = this
+      const tags = vm.$refs.tag
       this.$nextTick(() => {
         for (const tag of tags) {
           if (tag.to.path === this.$route.path) {

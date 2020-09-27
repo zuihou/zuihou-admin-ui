@@ -179,7 +179,7 @@ export default {
     sidebarLogo: 'Sidebar Logo'
   },
   system: {
-    title: 'zuihou-admin-ui System'
+    title: 'zuihou-admin-cloud'
   },
   tips: {
     systemError: 'System maintenance, please try again~',
