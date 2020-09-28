@@ -231,7 +231,7 @@ export default {
 </script>
 
 <style lang="scss">
-$bg: #283443;
+$bg: #fff;
 $light_gray: #fff;
 $cursor: #555;
 
