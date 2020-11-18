@@ -57,7 +57,7 @@ function handleError (error, reject) {
 }
 
 function handleSuccess (res, resolve) {
-  if (res.data.isError) {
+  if (!res.data.isSuccess) {
     // 未登录
     debugger
     if (res.data.code === 40000 || res.data.code === 40001 ||

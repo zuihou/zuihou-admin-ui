@@ -299,7 +299,7 @@ export default {
       }
     },
     handleAvatarSuccess (res, file) {
-      if (res.isError) {
+      if (!res.isSuccess) {
         this.$message.error(res.msg)
         return
       }
