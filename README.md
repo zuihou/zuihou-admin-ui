@@ -1,3 +1,6 @@
+# 3.0.0版本开始, 本项目已经不在维护, 最新版本代码参考 https://gitee.com/zuihou111/lamp-web
+
+
 ### zuihou-ui
 
 zuihou-ui 是[zuihou-admin-cloud](https://github.com/zuihou/zuihou-admin-cloud)微服务权限系统的 `租户后台`，基于[vue element admin](https://panjiachen.github.io/vue-element-admin-site/zh/)构建。
